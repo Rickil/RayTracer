@@ -3,6 +3,7 @@
 
 #include "Camera.hh"
 #include "Object.hh"
+#include "Light.hh"
 
 class Scene {
 public:

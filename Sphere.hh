@@ -50,7 +50,7 @@ public:
         //we return the vector as a unit vector
         return direction/ norm(direction);
     }
-    std::vector<float> getTexture(Point3 point){
+    std::pair<Color, std::vector<float>> getTexture(Point3 point){
         return this->textureMaterial->response(point);
     }
 

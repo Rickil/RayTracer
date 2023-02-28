@@ -2,6 +2,7 @@
 #define TP1_RAYTRACING_UNIFORM_TEXTURE_HH
 
 #include "Texture_Material.hh"
+#include "Color.hh"
 #include <utility>
 
 class Uniform_Texture : public Texture_Material {

@@ -10,7 +10,7 @@ public:
 
     virtual std::optional<Point3> intersect(Vector3 ray) = 0;
     virtual Vector3 getNormal(Point3 point) = 0;
-    virtual std::vector<float> getTexture(Point3 point) = 0;
+    virtual std::pair<Color, std::vector<float>> getTexture(Point3 point) = 0;
 
 };
 

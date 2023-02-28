@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Vector3.hh"
+#include "Color.hh"
 
 class Texture_Material {
 public:

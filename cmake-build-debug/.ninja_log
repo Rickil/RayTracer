@@ -1,5 +1,6 @@
 # ninja log v5
-6	91	6992063674930190	CMakeFiles/TP1_RayTracing.dir/Vector3.cc.obj	4917df78213fe948
 5	890	6992422583891008	CMakeFiles/TP1_RayTracing.dir/Main.cc.obj	5ac6eabe940d334d
 892	1587	6992422590832631	TP1_RayTracing.exe	e79a79b48cfd3d70
-3	1254	6992420551386498	CMakeFiles/TP1_RayTracing.dir/Image.cc.obj	45ecda3dba42ae0a
+5	648	6992466947496973	CMakeFiles/TP1_RayTracing.dir/Image.cc.obj	d868b25c88cdf1b3
+6	641	6992473710766022	CMakeFiles/TP1_RayTracing.dir/Main.cc.obj	43ce5cbb48682c21
+642	825	6992473712576333	TP1_RayTracing.exe	e79a79b48cfd3d70

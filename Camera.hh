@@ -4,6 +4,7 @@
 #include "Vector3.hh"
 
 class Camera {
+public:
     Point3 center;
     Point3 spottedPoint;
     Vector3 skyDirection;

@@ -39,7 +39,7 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = C$:/dev/TP1_RayTracing/cmake-build-debug/
+cmake_ninja_workdir = C$:/dev/TP1RayTracing/cmake-build-debug/
 # =============================================================================
 # Object build statements for EXECUTABLE target TP1_RayTracing
 
@@ -49,17 +49,17 @@ cmake_ninja_workdir = C$:/dev/TP1_RayTracing/cmake-build-debug/
 
 build cmake_object_order_depends_target_TP1_RayTracing: phony || CMakeFiles/TP1_RayTracing.dir
 
-build CMakeFiles/TP1_RayTracing.dir/Main.cc.obj: CXX_COMPILER__TP1_RayTracing_Debug C$:/dev/TP1_RayTracing/Main.cc || cmake_object_order_depends_target_TP1_RayTracing
+build CMakeFiles/TP1_RayTracing.dir/Main.cc.obj: CXX_COMPILER__TP1_RayTracing_Debug C$:/dev/TP1RayTracing/Main.cc || cmake_object_order_depends_target_TP1_RayTracing
   DEP_FILE = CMakeFiles\TP1_RayTracing.dir\Main.cc.obj.d
   FLAGS = -g -std=gnu++17
-  INCLUDES = -IC:/dev/TP1_RayTracing/.
+  INCLUDES = -IC:/dev/TP1RayTracing/.
   OBJECT_DIR = CMakeFiles\TP1_RayTracing.dir
   OBJECT_FILE_DIR = CMakeFiles\TP1_RayTracing.dir
 
-build CMakeFiles/TP1_RayTracing.dir/Image.cc.obj: CXX_COMPILER__TP1_RayTracing_Debug C$:/dev/TP1_RayTracing/Image.cc || cmake_object_order_depends_target_TP1_RayTracing
+build CMakeFiles/TP1_RayTracing.dir/Image.cc.obj: CXX_COMPILER__TP1_RayTracing_Debug C$:/dev/TP1RayTracing/Image.cc || cmake_object_order_depends_target_TP1_RayTracing
   DEP_FILE = CMakeFiles\TP1_RayTracing.dir\Image.cc.obj.d
   FLAGS = -g -std=gnu++17
-  INCLUDES = -IC:/dev/TP1_RayTracing/.
+  INCLUDES = -IC:/dev/TP1RayTracing/.
   OBJECT_DIR = CMakeFiles\TP1_RayTracing.dir
   OBJECT_FILE_DIR = CMakeFiles\TP1_RayTracing.dir
 
@@ -86,7 +86,7 @@ build TP1_RayTracing.exe: CXX_EXECUTABLE_LINKER__TP1_RayTracing_Debug CMakeFiles
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D C:\dev\TP1_RayTracing\cmake-build-debug && "D:\Program Files\JetBrains\CLion 2021.3.3\bin\cmake\win\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  COMMAND = cmd.exe /C "cd /D C:\dev\TP1RayTracing\cmake-build-debug && "D:\Program Files\JetBrains\CLion 2021.3.3\bin\cmake\win\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -97,7 +97,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D C:\dev\TP1_RayTracing\cmake-build-debug && "D:\Program Files\JetBrains\CLion 2021.3.3\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -SC:\dev\TP1_RayTracing -BC:\dev\TP1_RayTracing\cmake-build-debug"
+  COMMAND = cmd.exe /C "cd /D C:\dev\TP1RayTracing\cmake-build-debug && "D:\Program Files\JetBrains\CLion 2021.3.3\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -SC:\dev\TP1RayTracing -BC:\dev\TP1RayTracing\cmake-build-debug"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -115,7 +115,7 @@ build TP1_RayTracing: phony TP1_RayTracing.exe
 # =============================================================================
 
 #############################################
-# Folder: C:/dev/TP1_RayTracing/cmake-build-debug
+# Folder: C:/dev/TP1RayTracing/cmake-build-debug
 
 build all: phony TP1_RayTracing.exe
 

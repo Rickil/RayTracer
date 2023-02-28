@@ -8,10 +8,10 @@ include_directories(.)
 add_executable(TP1_RayTracing
         Main.cc
         Vector3.hh
+        Color.hh
         Image.hh
         Image.cc
         Object.hh
         Texture_Material.hh
         Uniform_Texture.hh
-        Light.hh
-        Sphere.hh tools.hh Light.hh Point_Light.hh Point3.hh AllHeaders.hh Camera.hh Scene.hh)
+        Sphere.hh tools.hh Light.hh Point_Light.hh Point3.hh Camera.hh Scene.hh)
