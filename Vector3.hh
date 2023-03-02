@@ -52,6 +52,10 @@ public:
         return Vector3(this->origin, this->x, this->y, value);
     }
 
+    Vector3 setOrigin(Point3 origin){
+        return Vector3(origin, this->x, this->y, this->z);
+    }
+
     Point3 getPointReached(){
         return Point3(this->origin.x + this->x, this->origin.y + this->y, this->origin.z + this->z);
     }

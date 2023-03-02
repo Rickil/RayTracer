@@ -24,16 +24,16 @@ public:
 
     Camera(){}
     Camera(Point3 center, Point3 spottedPoint, Vector3 skyDirection, float fovAlphaAngle,
-           float fovBetaAngle, float z_min){
+           float fovBetaAngle){
         this->center = center;
         this->spottedPoint = spottedPoint;
         this->skyDirection = skyDirection;
         this->fovAlphaAngle = fovAlphaAngle;
         this->fovBetaAngle = fovBetaAngle;
-        this->z_min = z_min;
+        this->z_min = Vector3(spottedPoint, center).magnitude();
     }
 
-    std::vector<Vector3> buildImagePlan(){
+    std::vector<Point3> buildImagePlan(){
 
         //create plan
         Vector3 spottedPointDirection = Vector3(spottedPoint, center);
@@ -43,9 +43,13 @@ public:
         res = normalize(vectorialProduct(left, spottedPointDirection))*z_min*std::sin(fovBetaAngle/2);
         Vector3 up = Vector3(spottedPoint, res.x, res.y, res.z);
 
-        Vector3 v1 = 
+        Point3 p1 = (up+left).setOrigin(spottedPoint).getPointReached();
+        Point3 p2 = (up-left).setOrigin(spottedPoint).getPointReached();
+        Point3 p3 = (left-up).setOrigin(spottedPoint).getPointReached();
+        Point3 p4 = (left*-1-up).setOrigin(spottedPoint).getPointReached();
 
-        return {v1, v2, v3, v4};
+
+        return {p1,p2,p3,p4};
     }
 
 };

@@ -68,12 +68,11 @@ public:
 
     Image generateImage(){
         Image image(width, height);
-        Vector3 ref = this->scene.camera.buildImagePlan()[0];
         for (int i = 1; i < height+1; i++){
             float betaAngle = this->scene.camera.fovBetaAngle/height;
             for (int j = 1; j < width+1; j++){
                 float alphaAngle = this->scene.camera.fovAlphaAngle/width;
-                image.pixels[i-1][j-1] = castRay(ref.rotateX(betaAngle).rotateY(alphaAngle));
+                //image.pixels[i-1][j-1] = castRay(ref.rotateX(betaAngle).rotateY(alphaAngle));
             }
         }
         return image;

@@ -13,7 +13,7 @@ int main(){
     Uniform_Texture* uniformTexture = new Uniform_Texture(Color(127,35,203), 0.8, 0.5);
     Sphere sphere(uniformTexture, Point3(5,3,5), 3);
     Camera camera(Point3(0,3,0), Point3(10,3,10),Vector3(0,1,0)
-                  ,70,70, 100);
+                  ,70,70);
     Scene scene(camera);
     scene.objects.push_back(sphere);
     Engine engine(scene, 500, 500);
@@ -27,7 +27,7 @@ int main(){
                 << "," << std::to_string(plan[i].z) << ")";
         //}
     }*/
-    image.savePPM("RayTraced.ppm");
+    //image.savePPM("RayTraced.ppm");
     /*Vector3 vector(0,0,4);
     std::cout << vector.rotateX(70);*/
 }
