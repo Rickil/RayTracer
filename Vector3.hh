@@ -2,6 +2,7 @@
 #define TP1_RAYTRACING_VECTOR3_HH
 #include <iostream>
 #include <string>
+#include <cmath>
 #include "Point3.hh"
 class Vector3 {
 public:
@@ -30,11 +31,29 @@ public:
         this->origin = origin;
     }
 
-    Vector3(Point3 P1, Point3 P2){
-        this->x = P1.x - P2.x;
-        this->y = P1.y - P2.y;
-        this->z = P1.z - P2.z;
-        this->origin = P2;
+    Vector3(Point3 destination, Point3 origin){
+        this->x = destination.x - origin.x;
+        this->y = destination.y - origin.y;
+        this->z = destination.z - origin.z;
+        this->origin = origin;
+    }
+
+    Point3 getPointReached(){
+        return Point3(this->origin.x + this->x, this->origin.y + this->y, this->origin.z + this->z);
+    }
+
+    Vector3 rotateY(float angle){
+        angle = angle * (PI / 180);
+        return Vector3(this->origin, this->x*std::cos(angle)-this->z*std::sin(angle), this->y, this->z*std::cos(angle)-this->x*std::sin(angle));
+    }
+
+    Vector3 rotateX(float angle){
+        angle = angle * (PI / 180);
+        return Vector3(this->origin,this->x, this->y*std::cos(angle)-this->z* std::sin(angle), this->y*std::sin(angle)+this->z*std::cos(angle));
+    }
+
+    float magnitude(){
+        return std::sqrt(this->x*this->x+this->y*this->y+this->z*this->z);
     }
 
     Vector3 operator*(const float &l) const{

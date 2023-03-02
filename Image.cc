@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-void Image::savePPM() {
+void Image::savePPM(std::string path) {
     std::string content = "P3\n";
     content += std::to_string(this->width) + " " + std::to_string(this->height) + "\n";
     content += "255\n";
@@ -26,7 +26,7 @@ void Image::savePPM() {
 
     std::cout << content;
     std::ofstream myfile;
-    myfile.open ("image.ppm");
+    myfile.open (path);
     myfile << content;
     myfile.close();
 }

@@ -4,6 +4,7 @@
 
 #ifndef TP1_RAYTRACING_TOOLS_HH
 #define TP1_RAYTRACING_TOOLS_HH
+#define PI           3.14159265358979323846
 
 
 #include "Vector3.hh"

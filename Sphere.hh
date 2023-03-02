@@ -4,7 +4,7 @@
 #include "Object.hh"
 #include "tools.hh"
 
-class Sphere : Object{
+class Sphere : public Object{
 
 public:
     Point3 position;
