@@ -40,6 +40,18 @@ public:
         this->origin = origin;
     }
 
+    Vector3 setX(float value){
+        return Vector3(this->origin, value, this->y, this->z);
+    }
+
+    Vector3 setY(float value){
+        return Vector3(this->origin, this->x, value, this->z);
+    }
+
+    Vector3 setZ(float value){
+        return Vector3(this->origin, this->x, this->y, value);
+    }
+
     Point3 getPointReached(){
         return Point3(this->origin.x + this->x, this->origin.y + this->y, this->origin.z + this->z);
     }
@@ -57,6 +69,7 @@ public:
     float magnitude(){
         return std::sqrt(this->x*this->x+this->y*this->y+this->z*this->z);
     }
+
 
     Vector3 operator*(const float &l) const{
         return Vector3(this->x * l, this->y * l, this->z*l);
