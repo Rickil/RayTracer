@@ -1,5 +1,7 @@
 #ifndef TP1_RAYTRACING_VECTOR3_HH
 #define TP1_RAYTRACING_VECTOR3_HH
+#define PI           3.14159265358979323846
+
 #include <iostream>
 #include <string>
 #include <cmath>
@@ -44,7 +46,7 @@ public:
 
     Vector3 rotateY(float angle){
         angle = angle * (PI / 180);
-        return Vector3(this->origin, this->x*std::cos(angle)-this->z*std::sin(angle), this->y, this->z*std::cos(angle)-this->x*std::sin(angle));
+        return Vector3(this->origin, this->x*std::cos(angle)+this->z*std::sin(angle), this->y, this->z*std::cos(angle)-this->x*std::sin(angle));
     }
 
     Vector3 rotateX(float angle){

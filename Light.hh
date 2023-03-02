@@ -6,7 +6,7 @@
 class Light {
 public:
     float intensity;
-    Vector3 position;
+    Point3 position;
 };
 
 

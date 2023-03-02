@@ -24,7 +24,7 @@ void Image::savePPM(std::string path) {
     }
     content += line;
 
-    std::cout << content;
+    //std::cout << content;
     std::ofstream myfile;
     myfile.open (path);
     myfile << content;

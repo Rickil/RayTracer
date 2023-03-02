@@ -10,7 +10,7 @@
 class Point_Light : Light {
 public:
 
-    Point_Light(float intensity, Vector3 position){
+    Point_Light(float intensity, Point3 position){
         this->intensity = intensity;
         this->position = position;
     }

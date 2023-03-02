@@ -5,6 +5,8 @@
 #ifndef TP1_RAYTRACING_COLOR_HH
 #define TP1_RAYTRACING_COLOR_HH
 
+#include <iostream>
+
 
 class Color {
 public:
@@ -24,6 +26,11 @@ public:
         this->blue = blue;
     }
 };
+
+/*std::ostream& operator<<(std::ostream& out, const Color& color) {
+    return out << "(" << std::to_string(color.red) << "," << std::to_string(color.green)
+               << "," << std::to_string(color.blue) << ")";
+}*/
 
 
 #endif //TP1_RAYTRACING_COLOR_HH

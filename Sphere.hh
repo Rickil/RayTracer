@@ -22,18 +22,19 @@ public:
     }
 
     std::optional<Point3> intersect(Vector3 ray){
+        Vector3 normalizedRay = ray/ray.magnitude();
         float det = square(ray*(ray.origin - this->position))
                 -(norm(ray.origin - this->position) - square(this->size));
         if (det < 0)
             return std::nullopt;
         else if (det == 0){
             float res = ray*(ray.origin - this->position);
-            return ray*res + ray.origin;
+            return normalizedRay*res + ray.origin;
         }else{
             float res1 = ray*(ray.origin - this->position) + std::sqrt(det);
             float res2 = ray*(ray.origin - this->position) - std::sqrt(det);
-            Point3 point1 = ray*res1 + ray.origin;
-            Point3 point2 = ray*res2 + ray.origin;
+            Point3 point1 = normalizedRay*res1 + ray.origin;
+            Point3 point2 = normalizedRay*res2 + ray.origin;
 
             float min = std::min(norm(point1), norm(point2));
             return (min == norm(point1)) ? point1 : point2;

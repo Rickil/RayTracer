@@ -41,7 +41,8 @@ public:
         Vector3 v1 = (fovAlphaDirection*z_min);
         Vector3 v2 = v1.rotateX(fovBetaAngle);
         Vector3 v3 = v2.rotateY(fovAlphaAngle);
-        Vector3 v4 = v3.rotateX(fovBetaAngle);
+        Vector3 v4 = v1.rotateY(fovBetaAngle);
+        std::cout << v1 << "\n"<< v2 << "\n"<< v3 << "\n"<< v4 << "\n";
 
         //get X and Y rotation angles of spottedPoint vector
         Vector3 spottedPointDirection = Vector3(spottedPoint, center);

@@ -6,6 +6,7 @@
 #include "Vector3.hh"
 #include <vector>
 #include <utility>
+#include <iostream>
 
 class Engine {
 public:
@@ -29,8 +30,10 @@ public:
         //check collisions with all the scene objects
         std::vector<std::pair<Point3, int>> collisions;
         for (int i =0; i < scene.objects.size(); i++){
+
             std::optional<Point3> collision = scene.objects[i].intersect(Ray);
             if (collision != std::nullopt) {
+                std::cout << "collision !";
                 collisions.push_back(std::make_pair(collision.value(), i));
             }
         }
@@ -65,12 +68,12 @@ public:
 
     Image generateImage(){
         Image image(width, height);
-        for (int i = 0; i < height; i++){
-            float betaAngle = this->scene.camera.fovBetaAngle/(height-1);
-            for (int j = 0; j < width; j++){
-                float alphaAngle = this->scene.camera.fovAlphaAngle/(width-1);
-                Vector3 ref = this->scene.camera.buildImagePlan()[0];
-                image.pixels[i][j] = castRay(ref.rotateX(betaAngle).rotateY(alphaAngle));
+        Vector3 ref = this->scene.camera.buildImagePlan()[0];
+        for (int i = 1; i < height+1; i++){
+            float betaAngle = this->scene.camera.fovBetaAngle/height;
+            for (int j = 1; j < width+1; j++){
+                float alphaAngle = this->scene.camera.fovAlphaAngle/width;
+                image.pixels[i-1][j-1] = castRay(ref.rotateX(betaAngle).rotateY(alphaAngle));
             }
         }
         return image;
