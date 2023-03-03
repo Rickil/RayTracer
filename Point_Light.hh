@@ -7,7 +7,7 @@
 
 #include "Light.hh"
 
-class Point_Light : Light {
+class Point_Light : public Light {
 public:
 
     Point_Light(float intensity, Point3 position){

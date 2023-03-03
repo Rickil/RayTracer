@@ -7,7 +7,6 @@
 
 #include <iostream>
 
-
 class Color {
 public:
     int red;
@@ -25,6 +24,11 @@ public:
         this->green = green;
         this->blue = blue;
     }
+
+    Color operator*(const float &l) const{
+        return Color(red * l, green*l, blue*l);
+    };
+
 };
 
 /*std::ostream& operator<<(std::ostream& out, const Color& color) {

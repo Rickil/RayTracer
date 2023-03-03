@@ -29,15 +29,15 @@ public:
             return std::nullopt;
         else if (det == 0){
             float res = ray*(ray.origin - this->position);
-            return normalizedRay*res + ray.origin;
+            return (normalizedRay*res).getPointReached();
         }else{
             float res1 = ray*(ray.origin - this->position) + std::sqrt(det);
             float res2 = ray*(ray.origin - this->position) - std::sqrt(det);
-            Point3 point1 = normalizedRay*res1 + ray.origin;
-            Point3 point2 = normalizedRay*res2 + ray.origin;
+            Point3 point1 = (normalizedRay*res1).getPointReached();
+            Point3 point2 = (normalizedRay*res2).getPointReached();
 
-            float min = std::min(norm(point1), norm(point2));
-            return (min == norm(point1)) ? point1 : point2;
+            return (Vector3(point1, ray.origin).magnitude()
+            < Vector3(point2, ray.origin).magnitude()) ? point1 : point2;
         }
     }
     Vector3 getNormal(Point3 point){

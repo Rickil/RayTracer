@@ -53,6 +53,8 @@ public:
         }
 
         //get texture infos of collision point
+        Object* intersectedObject = this->scene.objects[std::get<int>(nearestCollision)];
+        Point3 intersectionPoint = std::get<Point3>(nearestCollision);
         std::pair<Color, std::vector<float>> textureInfos = this->scene.objects[std::get<int>(nearestCollision)]
                 ->getTexture(std::get<Point3>(nearestCollision));
 
@@ -61,6 +63,17 @@ public:
         float ks = std::get<std::vector<float>>(textureInfos)[1];
 
         //apply calculus on color with infos
+
+        //apply diffusion
+
+        for (Light* light : scene.lights) {
+            Vector3 N = intersectedObject->getNormal(intersectionPoint);
+            Vector3 L = Vector3(light->position, intersectionPoint);
+            float I = light->intensity;
+            color = color * std::abs(N*L) * kd * I;
+        }
+        //std::cout << "(" << color.red << "," << color.green << "," << color.blue << ") ";
+
 
         //return final pixel color
         return color;
@@ -77,8 +90,6 @@ public:
             for (int j = 1; j < width+1; j++){
                 Vector3 pixelFinderRight = (rightDirection/width*j).setOrigin(pixelFinderDown.getPointReached());
                 Vector3 Ray = Vector3(pixelFinderRight.getPointReached(), scene.camera.center);
-                if (i == height/4 && j == width/4)
-                    std::cout << "(" << pixelFinderRight.getPointReached().x << "," << pixelFinderRight.getPointReached().y << "," << pixelFinderRight.getPointReached().z << ")";
                 image.pixels[i-1][j-1] = castRay(Ray);
             }
         }
