@@ -33,7 +33,7 @@ public:
         this->z_min = Vector3(spottedPoint, center).magnitude();
     }
 
-    std::vector<Point3> buildImagePlan(){
+    std::vector<Vector3> buildImagePlan(){
 
         //create plan
         Vector3 spottedPointDirection = Vector3(spottedPoint, center);
@@ -44,12 +44,13 @@ public:
         Vector3 up = Vector3(spottedPoint, res.x, res.y, res.z);
 
         Point3 p1 = (up+left).setOrigin(spottedPoint).getPointReached();
-        Point3 p2 = (up-left).setOrigin(spottedPoint).getPointReached();
-        Point3 p3 = (left-up).setOrigin(spottedPoint).getPointReached();
-        Point3 p4 = (left*-1-up).setOrigin(spottedPoint).getPointReached();
+        Vector3 v1 = Vector3(p1, center);
+        Vector3 rightDirection = (left*-2).setOrigin(p1);
+        Vector3 downDirection = (up*-2).setOrigin(p1);
 
 
-        return {p1,p2,p3,p4};
+
+        return {v1, rightDirection, downDirection};
     }
 
 };

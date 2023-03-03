@@ -68,11 +68,18 @@ public:
 
     Image generateImage(){
         Image image(width, height);
+        std::vector<Vector3> planInfos = scene.camera.buildImagePlan();
+        Vector3 refVector = planInfos[0];
+        Vector3 rightDirection = planInfos[1];
+        Vector3 downDirection = planInfos[2];
+        Vector3 pixelFinder = refVector;
         for (int i = 1; i < height+1; i++){
-            float betaAngle = this->scene.camera.fovBetaAngle/height;
+            pixelFinder = refVector+downDirection/height*i;
             for (int j = 1; j < width+1; j++){
-                float alphaAngle = this->scene.camera.fovAlphaAngle/width;
-                //image.pixels[i-1][j-1] = castRay(ref.rotateX(betaAngle).rotateY(alphaAngle));
+                pixelFinder = pixelFinder+rightDirection/width*j;
+                Vector3 Ray = Vector3(pixelFinder.getPointReached(), scene.camera.center);
+                std::cout << "(" << Ray.getPointReached().x << "," << Ray.getPointReached().y << "," << Ray.getPointReached().z << ")";
+                image.pixels[i-1][j-1] = castRay(Ray);
             }
         }
         return image;
