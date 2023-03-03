@@ -49,7 +49,7 @@ public:
         direction.origin = point;
 
         //we return the vector as a unit vector
-        return direction/ norm(direction);
+        return normalize(direction);
     }
     std::pair<Color, std::vector<float>> getTexture(Point3 point){
         return this->textureMaterial->response(point);
