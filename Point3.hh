@@ -19,6 +19,12 @@ public:
         this->z = 0;
     }
 
+    Point3(Point3 const &point){
+        this->x = point.x;
+        this->y = point.y;
+        this->z = point.z;
+    }
+
     Point3(float x, float y, float z){
         this->x = x;
         this->y = y;

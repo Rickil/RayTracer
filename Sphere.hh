@@ -23,7 +23,7 @@ public:
 
     std::optional<Point3> intersect(Vector3 ray){
         Vector3 normalizedRay = ray/ray.magnitude();
-        float det = square(ray*(ray.origin - this->position))
+        float det = square(normalizedRay*(ray.origin - this->position))
                 -(norm(ray.origin - this->position) - square(this->size));
         if (det < 0)
             return std::nullopt;

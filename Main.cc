@@ -11,12 +11,12 @@ int main(){
     image.savePPM();*/
 
     Uniform_Texture* uniformTexture = new Uniform_Texture(Color(127,35,203), 0.8, 0.5);
-    Sphere sphere(uniformTexture, Point3(5,3,5), 4);
+    Sphere* sphere = new Sphere(uniformTexture, Point3(5,3,5), 4);
     Camera camera(Point3(0,3,0), Point3(10,3,10),Vector3(0,1,0)
                   ,70,70);
     Scene scene(camera);
     scene.objects.push_back(sphere);
-    Engine engine(scene, 500, 500);
+    Engine engine(scene, 1000, 1000);
     Image image = engine.generateImage();
 
     /*auto plan = camera.buildImagePlan();

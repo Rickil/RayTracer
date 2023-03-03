@@ -31,10 +31,10 @@ public:
         std::vector<std::pair<Point3, int>> collisions;
         for (int i =0; i < scene.objects.size(); i++){
 
-            std::optional<Point3> collision = scene.objects[i].intersect(Ray);
+            std::optional<Point3> collision = scene.objects[i]->intersect(Ray);
             if (collision != std::nullopt) {
-                std::cout << "collision !";
-                collisions.push_back(std::make_pair(collision.value(), i));
+                //std::cout << "collision !";
+                collisions.push_back(std::make_pair(Point3(collision.value()), i));
             }
         }
 
@@ -54,7 +54,7 @@ public:
 
         //get texture infos of collision point
         std::pair<Color, std::vector<float>> textureInfos = this->scene.objects[std::get<int>(nearestCollision)]
-                .getTexture(std::get<Point3>(nearestCollision));
+                ->getTexture(std::get<Point3>(nearestCollision));
 
         Color color = std::get<Color>(textureInfos);
         float kd = std::get<std::vector<float>>(textureInfos)[0];
@@ -72,13 +72,13 @@ public:
         Vector3 refVector = planInfos[0];
         Vector3 rightDirection = planInfos[1];
         Vector3 downDirection = planInfos[2];
-        Vector3 pixelFinder = refVector;
         for (int i = 1; i < height+1; i++){
-            pixelFinder = refVector+downDirection/height*i;
+            Vector3 pixelFinderDown = (downDirection/height*i).setOrigin(refVector.getPointReached());
             for (int j = 1; j < width+1; j++){
-                pixelFinder = pixelFinder+rightDirection/width*j;
-                Vector3 Ray = Vector3(pixelFinder.getPointReached(), scene.camera.center);
-                std::cout << "(" << Ray.getPointReached().x << "," << Ray.getPointReached().y << "," << Ray.getPointReached().z << ")";
+                Vector3 pixelFinderRight = (rightDirection/width*j).setOrigin(pixelFinderDown.getPointReached());
+                Vector3 Ray = Vector3(pixelFinderRight.getPointReached(), scene.camera.center);
+                if (i == height/4 && j == width/4)
+                    std::cout << "(" << pixelFinderRight.getPointReached().x << "," << pixelFinderRight.getPointReached().y << "," << pixelFinderRight.getPointReached().z << ")";
                 image.pixels[i-1][j-1] = castRay(Ray);
             }
         }
