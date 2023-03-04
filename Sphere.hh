@@ -43,10 +43,10 @@ public:
     Vector3 getNormal(Point3 point){
 
         //we get the normal direction by taking the vector from center to intersection point
-        Vector3 direction(point, this->position);
+        Vector3 direction(this->position, point);
 
         //we set the origin of the vector to the intersection point at the surface
-        direction.origin = point;
+        //direction.origin = point;
 
         //we return the vector as a unit vector
         return normalize(direction);

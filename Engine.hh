@@ -68,10 +68,11 @@ public:
 
         for (Light* light : scene.lights) {
             Vector3 N = intersectedObject->getNormal(intersectionPoint);
-            std::cout << N;
             Vector3 L = Vector3(light->position, intersectionPoint);
             float I = light->intensity;
-            color = color * std::abs(N*L) * kd * I;
+            float d = Vector3(intersectionPoint, scene.camera.center).magnitude();
+            color = color * (N*L) * kd * I * (1/std::sqrt(d));
+            //std::cout << (N*L) << "\n";
         }
         //std::cout << "(" << color.red << "," << color.green << "," << color.blue << ") ";
 
