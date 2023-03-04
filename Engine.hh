@@ -56,7 +56,7 @@ public:
         //get texture infos of collision point
         Object* intersectedObject = this->scene.objects[std::get<int>(nearestCollision)];
         Point3 intersectionPoint = std::get<Point3>(nearestCollision);
-        std::cout << intersectionPoint;
+        //std::cout << intersectionPoint;
         std::pair<Color, std::vector<float>> textureInfos = this->scene.objects[std::get<int>(nearestCollision)]
                 ->getTexture(std::get<Point3>(nearestCollision));
 
@@ -70,11 +70,11 @@ public:
 
         for (Light* light : scene.lights) {
             Vector3 N = intersectedObject->getNormal(intersectionPoint);
-            Vector3 L = Vector3(light->position, intersectionPoint);
+            Vector3 L = normalize(Vector3(light->position, intersectionPoint));
             float I = light->intensity;
             float d = Vector3(intersectionPoint, scene.camera.center).magnitude();
             color = color * (N*L) * kd * I; //* (1/std::sqrt(d));
-            //std::cout <<N.origin << ":" << N << " " << L.origin << ":" << L << " " << (N*L) << "\n";
+            std::cout <<N.origin << ":" << N << " " << L.origin << ":" << L << " " << (N*L) << "\n";
         }
         //std::cout << "(" << color.red << "," << color.green << "," << color.blue << ") ";
 
