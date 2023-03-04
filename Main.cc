@@ -19,7 +19,7 @@ int main(){
     Sphere* sphere2 = new Sphere(uniformTexture2, Point3(8,3,5), 1);
     Rectangle* rectangle = new Rectangle(uniformTexture3, Point3(-25,0,-25),
                                          Vector3(0,0,50), Vector3(50,0,0));
-    Camera camera(Point3(0.5,13,0), Point3(6,3,5),Vector3(0,0.5,0.5)
+    Camera camera(Point3(0,3,0), Point3(5,3,5),Vector3(0,1,0)
                   ,70,70);
     Point_Light* pointLight = new Point_Light(0.8, Point3(2,3,2));
     Scene scene(camera);

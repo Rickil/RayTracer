@@ -33,5 +33,10 @@ public:
 
 };
 
+std::ostream& operator<<(std::ostream& out, const Point3& point){
+    return out << "(" << std::to_string(point.x)  << "," << std::to_string(point.y)
+               << "," << std::to_string(point.z) << ")";
+}
+
 
 #endif //TP1_RAYTRACING_POINT3_HH

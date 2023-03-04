@@ -48,8 +48,9 @@ public:
         for (int i = 1; i < collisions.size(); i++){
             float distance = Vector3(std::get<Point3>(nearestCollision), this->scene.camera.center).magnitude();
             float newDistance = Vector3( std::get<Point3>(collisions[i]), this->scene.camera.center).magnitude();
-            if (distance < newDistance)
-                nearestCollision =  collisions[i];
+            if (distance > newDistance) {
+                nearestCollision = collisions[i];
+            }
         }
 
         //get texture infos of collision point
@@ -71,7 +72,7 @@ public:
             Vector3 L = Vector3(light->position, intersectionPoint);
             float I = light->intensity;
             float d = Vector3(intersectionPoint, scene.camera.center).magnitude();
-            color = color * (N*L) * kd * I * (1/std::sqrt(d));
+            color = color * (N*L) * kd * I; //* (1/std::sqrt(d));
             //std::cout << (N*L) << "\n";
         }
         //std::cout << "(" << color.red << "," << color.green << "," << color.blue << ") ";
