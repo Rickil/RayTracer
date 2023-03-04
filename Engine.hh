@@ -56,7 +56,7 @@ public:
         //get texture infos of collision point
         Object* intersectedObject = this->scene.objects[std::get<int>(nearestCollision)];
         Point3 intersectionPoint = std::get<Point3>(nearestCollision);
-        //std::cout << intersectionPoint;
+        std::cout << intersectionPoint;
         std::pair<Color, std::vector<float>> textureInfos = this->scene.objects[std::get<int>(nearestCollision)]
                 ->getTexture(std::get<Point3>(nearestCollision));
 

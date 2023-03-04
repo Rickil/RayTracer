@@ -22,11 +22,11 @@ public:
         this->origin = origin;
         this->width = width;
         this->height = height;
-        this->normal = normalize(vectorialProduct(width, height));
+        this->normal = normalize(vectorialProduct(width, height)).setOrigin(origin);
     }
 
     std::optional<Point3> intersect(Vector3 ray){
-        if (normalize(ray)*normal < 0) {
+        if (normalize(ray)*normal > 0) {
             return std::nullopt;
         }
 
@@ -39,7 +39,7 @@ public:
         //we check if the point is in the rectangle
         Vector3 Q1 = width*((Vector3(intersectionPoint, origin)*width)/
                 (norm(width)));
-        Vector3 Q2 = width*((Vector3(intersectionPoint, origin)*height)/
+        Vector3 Q2 = height*((Vector3(intersectionPoint, origin)*height)/
                      (norm(height)));
 
         if (0 <= Q1.magnitude() && Q1.magnitude() <= width.magnitude()

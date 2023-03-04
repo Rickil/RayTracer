@@ -37,7 +37,7 @@ public:
 
         //create plan
         Vector3 spottedPointDirection = Vector3(spottedPoint, center);
-        Vector3 res = normalize(vectorialProduct( spottedPointDirection, skyDirection))*z_min*std::sin(fovAlphaAngle/2);
+        Vector3 res = normalize(vectorialProduct( skyDirection, spottedPointDirection))*z_min*std::sin(fovAlphaAngle/2);
         Vector3 left = Vector3(spottedPoint, res.x, res.y, res.z);
 
         res = normalize(vectorialProduct(spottedPointDirection, left))*z_min*std::sin(fovBetaAngle/2);
