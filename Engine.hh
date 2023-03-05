@@ -13,16 +13,18 @@ public:
     Scene scene;
     int width;
     int height;
+    int maxBounce;
 
     Vector3 axisX = Vector3(1,0,0);
     Vector3 axisY = Vector3(0,1,0);
     Vector3 axisZ = Vector3(0,0,1);
 
 
-    Engine(Scene scene, int width, int height){
+    Engine(Scene scene, int width, int height, int maxBounce){
         this->scene = scene;
         this->width = width;
         this->height = height;
+        this->maxBounce = maxBounce;
     }
 
     Color applyDiffusion(Object* intersectedObject, Point3 intersectionPoint){
@@ -66,7 +68,20 @@ public:
         return color;
     }
 
-    Color castRay(Vector3 Ray){
+    Color applyReflexion(Object* intersectedObject, Point3 intersectionPoint, int bounce){
+        Color color;
+
+        std::pair<Color, std::vector<float>> textureInfos = intersectedObject->getTexture(intersectionPoint);
+        float ks = std::get<std::vector<float>>(textureInfos)[1];
+        Vector3 N = intersectedObject->getNormal(intersectionPoint);
+        Vector3 ray = Vector3(intersectionPoint, scene.camera.center);
+        Vector3 rotationAxis = vectorialProduct(ray, N);
+        float rotationAngle = getAngle(ray, N);
+        Vector3 S = N.rotateAxis(rotationAxis, rotationAngle).setOrigin(intersectionPoint);
+        return castRay(S, bounce+1)*ks;
+    }
+
+    Color castRay(Vector3 Ray, int bounce){
 
         //check collisions with all the scene objects
         std::vector<std::pair<Point3, int>> collisions;
@@ -98,7 +113,11 @@ public:
         Point3 intersectionPoint = std::get<Point3>(nearestCollision);
 
         //apply diffusion
-        Color color = applyDiffusion(intersectedObject, intersectionPoint)+ applySpecular(intersectedObject, intersectionPoint);
+        Color color = applyDiffusion(intersectedObject, intersectionPoint)
+                + applySpecular(intersectedObject, intersectionPoint);
+
+        if (bounce <= maxBounce)
+            color = color + applyReflexion(intersectedObject, intersectionPoint, bounce);
         //std::cout << "(" << color.red << "," << color.green << "," << color.blue << ") ";
 
 
@@ -117,7 +136,7 @@ public:
             for (int j = 1; j < width+1; j++){
                 Vector3 pixelFinderRight = (rightDirection/width*j).setOrigin(pixelFinderDown.getPointReached());
                 Vector3 Ray = Vector3(pixelFinderRight.getPointReached(), scene.camera.center);
-                image.pixels[i-1][j-1] = castRay(Ray);
+                image.pixels[i-1][j-1] = castRay(Ray, 1);
             }
         }
         return image;

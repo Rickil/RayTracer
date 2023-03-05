@@ -12,11 +12,11 @@ int main(){
     Image image(2,2,pixels);
     image.savePPM();*/
 
-    Uniform_Texture* uniformTexture = new Uniform_Texture(Color(127,35,203), 0.8, 0.8);
-    Uniform_Texture* uniformTexture2 = new Uniform_Texture(Color(138,152,103), 0.8, 0.8);
+    Uniform_Texture* uniformTexture = new Uniform_Texture(Color(127,35,203), 0.3, 0.8);
+    Uniform_Texture* uniformTexture2 = new Uniform_Texture(Color(138,152,103), 0.3, 0.8);
     Uniform_Texture* uniformTexture3 = new Uniform_Texture(Color(10,10,188), 0.8, 0.7);
-    Sphere* sphere = new Sphere(uniformTexture, Point3(0,3,5), 1);
-    Sphere* sphere2 = new Sphere(uniformTexture2, Point3(-1,3,4), 1);
+    Sphere* sphere = new Sphere(uniformTexture, Point3(1,3,5), 1);
+    Sphere* sphere2 = new Sphere(uniformTexture2, Point3(-1,3,2), 1);
     Rectangle* rectangle = new Rectangle(uniformTexture3, Point3(-25,0,-25),
                                          Vector3(0,0,50), Vector3(50,0,0));
     /*Rectangle* rectangle = new Rectangle(uniformTexture3, Point3(2,3,2),
@@ -24,12 +24,14 @@ int main(){
     Camera camera(Point3(0,3,0), Point3(0,3,5),Vector3(0,1,0)
                   ,70,70);
     Point_Light* pointLight = new Point_Light(0.8, Point3(0.5,3,3));
+    Point_Light* pointLight2 = new Point_Light(0.6, Point3(-2,4,3));
     Scene scene(camera);
     scene.objects.push_back(sphere);
     scene.objects.push_back(sphere2);
-    scene.objects.push_back(rectangle);
+    //scene.objects.push_back(rectangle);
     scene.lights.push_back(pointLight);
-    Engine engine(scene, 1000, 1000);
+    //scene.lights.push_back(pointLight2);
+    Engine engine(scene, 1000, 1000, 1);
     Image image = engine.generateImage();
 
     /*auto plan = camera.buildImagePlan();
