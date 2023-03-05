@@ -25,6 +25,47 @@ public:
         this->height = height;
     }
 
+    Color applyDiffusion(Object* intersectedObject, Point3 intersectionPoint){
+        Color color;
+
+        std::pair<Color, std::vector<float>> textureInfos = intersectedObject->getTexture(intersectionPoint);
+        Color objectColor = std::get<Color>(textureInfos);
+        Vector3 N = intersectedObject->getNormal(intersectionPoint);
+        float kd = std::get<std::vector<float>>(textureInfos)[0];
+        for (Light* light : scene.lights) {
+            Vector3 L = normalize(Vector3(light->position, intersectionPoint));
+            float I = light->intensity;
+            float d = Vector3(intersectionPoint, light->position).magnitude();
+            color = color + (objectColor * (N*L) * kd * I); //* (1/std::sqrt(d));
+            //std::cout <<N.origin << ":" << N << " " << L.origin << ":" << L << " " << (N*L) << "\n";
+        }
+
+        return color;
+    }
+
+    Color applySpecular(Object* intersectedObject, Point3 intersectionPoint){
+        Color color;
+
+        std::pair<Color, std::vector<float>> textureInfos = intersectedObject->getTexture(intersectionPoint);
+        Color objectColor = std::get<Color>(textureInfos);
+        float ks = std::get<std::vector<float>>(textureInfos)[1];
+        Vector3 N = intersectedObject->getNormal(intersectionPoint);
+        Vector3 ray = Vector3(intersectionPoint, scene.camera.center);
+        Vector3 rotationAxis = vectorialProduct(ray, N);
+        float rotationAngle = getAngle(ray, N);
+        Vector3 S = N.rotateAxis(rotationAxis, rotationAngle);
+        for (Light* light : scene.lights) {
+            Vector3 L = normalize(Vector3(light->position, intersectionPoint));
+            float I = light->intensity;
+            float d = Vector3(intersectionPoint, light->position).magnitude();
+            color = color + (objectColor * (S*L) * ks * I); //* (1/std::sqrt(d));
+            //std::cout <<N.origin << ":" << N << " " << L.origin << ":" << L << " " << (N*L) << "\n";
+        }
+
+
+        return color;
+    }
+
     Color castRay(Vector3 Ray){
 
         //check collisions with all the scene objects
@@ -52,30 +93,12 @@ public:
                 nearestCollision = collisions[i];
             }
         }
-
-        //get texture infos of collision point
+        //apply calculus on color with infos
         Object* intersectedObject = this->scene.objects[std::get<int>(nearestCollision)];
         Point3 intersectionPoint = std::get<Point3>(nearestCollision);
-        //std::cout << intersectionPoint;
-        std::pair<Color, std::vector<float>> textureInfos = this->scene.objects[std::get<int>(nearestCollision)]
-                ->getTexture(std::get<Point3>(nearestCollision));
-
-        Color color = std::get<Color>(textureInfos);
-        float kd = std::get<std::vector<float>>(textureInfos)[0];
-        float ks = std::get<std::vector<float>>(textureInfos)[1];
-
-        //apply calculus on color with infos
 
         //apply diffusion
-
-        for (Light* light : scene.lights) {
-            Vector3 N = intersectedObject->getNormal(intersectionPoint);
-            Vector3 L = normalize(Vector3(light->position, intersectionPoint));
-            float I = light->intensity;
-            float d = Vector3(intersectionPoint, scene.camera.center).magnitude();
-            color = color * (N*L) * kd * I; //* (1/std::sqrt(d));
-            std::cout <<N.origin << ":" << N << " " << L.origin << ":" << L << " " << (N*L) << "\n";
-        }
+        Color color = applyDiffusion(intersectedObject, intersectionPoint)+ applySpecular(intersectedObject, intersectionPoint);
         //std::cout << "(" << color.red << "," << color.green << "," << color.blue << ") ";
 
 

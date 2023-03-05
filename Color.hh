@@ -20,13 +20,21 @@ public:
     }
 
     Color(int red, int green, int blue){
-        this->red = red;
-        this->green = green;
-        this->blue = blue;
+        this->red = (red <= 255) ? red : 255;
+        this->green = (green <= 255) ? green : 255;
+        this->blue = (blue <= 255) ? blue : 255;
     }
 
     Color operator*(const float &l) const{
         return Color(red * l, green*l, blue*l);
+    };
+
+    Color operator+(const Color& color) const{
+        return Color(red + color.red, green+ color.green, blue+ color.blue);
+    };
+
+    Color operator+=(const Color& color) const{
+        return Color(red + color.red, green+ color.green, blue+ color.blue);
     };
 
 };

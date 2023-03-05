@@ -31,4 +31,8 @@ Vector3 normalize(Vector3 v){
     return v / v.magnitude();
 }
 
+float getAngle(Vector3 u, Vector3 v){
+    return std::acos((u*v)/(u.magnitude()*v.magnitude()));
+}
+
 #endif //TP1_RAYTRACING_TOOLS_HH

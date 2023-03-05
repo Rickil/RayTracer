@@ -70,6 +70,25 @@ public:
         return Vector3(this->origin,this->x, this->y*std::cos(angle)-this->z* std::sin(angle), this->y*std::sin(angle)+this->z*std::cos(angle));
     }
 
+    Vector3 vectorialProduct(Vector3 v){
+        return Vector3(y*v.z-z*v.y, z*v.x-x*v.z, x*v.y-y*v.x);
+    }
+
+    Vector3 rotateAxis(Vector3 axis, float angle){
+        angle = angle * (PI / 180);
+
+        Vector3 projectionOnAxis = axis*((*this * axis)/(axis*axis));
+        Vector3 projectionOnOrthogonalAxis = *this - projectionOnAxis;
+        Vector3 w = axis.vectorialProduct(projectionOnOrthogonalAxis);
+        Vector3 x1 = projectionOnOrthogonalAxis * (std::cos(angle)/projectionOnOrthogonalAxis.magnitude());
+        Vector3 x2 = w * (std::sin(angle)/w.magnitude());
+        Vector3 linearRepresentationRotation = (x1 + x2) * projectionOnOrthogonalAxis.magnitude();
+
+        Vector3 result = linearRepresentationRotation + projectionOnAxis;
+        return result / result.magnitude();
+
+    }
+
     float magnitude(){
         return std::sqrt(this->x*this->x+this->y*this->y+this->z*this->z);
     }
