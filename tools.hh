@@ -15,8 +15,8 @@ float square(float number){
     return number*number;
 }
 
-float norm(Point3 P){
-    return square(P.x) + square(P.y) + square(P.z);
+float dist(Point3 P1, Point3 P2){
+    return std::sqrt(square(P1.x-P2.x) + square(P1.y-P2.y) + square(P1.z-P2.z));
 }
 
 float norm(Vector3 V){

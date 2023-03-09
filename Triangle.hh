@@ -3,8 +3,10 @@
 
 #include "Object.hh"
 #include "tools.hh"
+#include <iostream>
 
 class Triangle : public Object{
+public:
     Point3 a;
     Point3 b;
     Point3 c;
@@ -16,25 +18,34 @@ class Triangle : public Object{
         this->c = c;
     }
 
+    float getCoeffs(Vector3 u, Vector3 v){
+        if (u.x != 0 && v.x != 0){
+            return u.x / v.x;
+        }else if (u.y != 0 && v.y != 0){
+            return u.y / v.y;
+        }else if (u.z != 0 && v.z != 0){
+            return u.z / v.z;
+        }
+        else{
+            return 0;
+        }
+    }
+
     std::optional<Point3> intersect(Vector3 ray){
         //we get vector from camera center to triangle edges
         Vector3 OA(a, ray.origin);
         Vector3 OB(b, ray.origin);
         Vector3 OC(c, ray.origin);
 
-        //we project the ray on OA, OB and OC
-        Vector3 POA = OA*((ray*OA)/(OA*OA));
-        Vector3 POB = OB*((ray*OB)/(OB*OB));
-        Vector3 POC = OC*((ray*OC)/(OC*OC));
-
         //we find the coeffs alpha, beta and gamma
-        float alpha = ray.x/POA.x;
-        float beta = ray.x/POB.x;
-        float gamma = ray.x/POC.x;
+        float alpha = 0;
+        float beta = 0;
+        float gamma = 0;
 
         if ((alpha >= 0 && beta >=0 && gamma >= 0) ||(alpha <= 0 && beta <=0 && gamma <= 0)) {
             //we get intersection
             Vector3 OG = (OA * alpha + OB * beta + OC * gamma) / (alpha + beta + gamma);
+            //std::cout << OG;
             return OG.setOrigin(ray.origin).getPointReached();
         } else {
             //no intersection

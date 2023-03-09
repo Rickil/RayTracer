@@ -91,14 +91,16 @@ public:
         return castRay(S, bounce+1)*ks;
     }
 
-    std::vector<std::pair<Point3, int>> checkCollisions(Vector3 Ray){
+    std::vector<std::pair<Point3, int>> checkCollisions(Vector3 Ray, int bounce){
         std::vector<std::pair<Point3, int>> collisions;
         for (int i =0; i < scene.objects.size(); i++){
-
             std::optional<Point3> collision = scene.objects[i]->intersect(Ray);
-            if (collision != std::nullopt /*&& !collision.value().equal(Ray.origin)*/) {
-                //std::cout << bounce << " collision ! " << collision.value() << Ray.origin << "\n";
-                collisions.push_back(std::make_pair(Point3(collision.value()), i));
+            if (collision != std::nullopt) {
+                if (bounce == 0)
+                    collisions.push_back(std::make_pair(Point3(collision.value()), i));
+                else if (bounce >= 1 && dist(Ray.origin, collision.value()) > 0.0001){
+                    collisions.push_back(std::make_pair(Point3(collision.value()), i));
+                }
             }
         }
         return collisions;
@@ -106,7 +108,7 @@ public:
 
     Color castRay(Vector3 Ray, int bounce){
         //check collisions with all the scene objects
-        std::vector<std::pair<Point3, int>> collisions = checkCollisions(Ray);
+        std::vector<std::pair<Point3, int>> collisions = checkCollisions(Ray, bounce);
 
         //if no collisions then return black color
         if (collisions.empty()){
