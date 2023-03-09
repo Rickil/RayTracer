@@ -48,12 +48,7 @@ public:
             Point3 point1 = (normalizedRay*res1).setOrigin(ray.origin).getPointReached();
             Point3 point2 = (normalizedRay*res2).setOrigin(ray.origin).getPointReached();
 
-            /*if (res1 <= 0)
-                return point2;
-            else if (res2 <= 0)
-                return point1;
-            else*/
-                return (Vector3(point1, ray.origin).magnitude()
+            return (Vector3(point1, ray.origin).magnitude()
             < Vector3(point2, ray.origin).magnitude()) ? point1 : point2;
         }
     }

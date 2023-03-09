@@ -31,7 +31,7 @@ int main(){
     scene.objects.push_back(sphere4);
     scene.objects.push_back(rectangleBottom);
     scene.lights.push_back(pointLight);
-    Engine engine(scene, 1000, 1000, 3);
+    Engine engine(scene, 1000, 1000, 2);
     Image image = engine.generateImage();
     image.savePPM("RayTraced.ppm");
 
