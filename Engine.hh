@@ -14,6 +14,7 @@ public:
     int width;
     int height;
     int maxBounce;
+    bool debug;
 
     Vector3 axisX = Vector3(1,0,0);
     Vector3 axisY = Vector3(0,1,0);
@@ -83,10 +84,14 @@ public:
         Vector3 rotationAxis = vectorialProduct(ray, N);
         float rotationAngle = getAngle(ray, N);
         Vector3 S = N.rotateAxis(rotationAxis, rotationAngle).setOrigin(intersectionPoint);
-        //std::cout << ray << S << intersectionPoint << "\n";
+        if (debug) {
+            std::cout << ray << ray.origin << S << intersectionPoint << "\n";
+        }
         //if (bounce >= 1)
            // std::cout << bounce << ": " << intersectionPoint;
-        return castRay(S, bounce+1)*ks;
+        auto res = castRay(S, bounce+1)*ks;
+        debug = false;
+        return res;
     }
 
     std::vector<std::pair<Point3, int>> checkCollisions(Vector3 Ray){
@@ -125,7 +130,7 @@ public:
 
         //apply diffusion and specular
         Color color = applyDiffusion(intersectedObject, intersectionPoint)
-                + applySpecular(intersectedObject, Ray,intersectionPoint);
+                + applySpecular(intersectedObject, Ray, intersectionPoint);
 
         if (bounce < maxBounce)
             color = color + applyReflexion(intersectedObject, Ray, intersectionPoint, bounce);
@@ -147,6 +152,8 @@ public:
             for (int j = 1; j < width+1; j++){
                 Vector3 pixelFinderRight = (rightDirection/width*j).setOrigin(pixelFinderDown.getPointReached());
                 Vector3 Ray = Vector3(pixelFinderRight.getPointReached(), scene.camera.center);
+                if (j == 636 && i == 292)
+                    debug = true;
                 image.pixels[i-1][j-1] = castRay(Ray, 0);
             }
         }
