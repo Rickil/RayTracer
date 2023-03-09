@@ -28,11 +28,13 @@ public:
         if (det < 0)
             return std::nullopt;
         else if (det == 0){
-            float res = normalizedRay*(ray.origin - this->position)*-1;
+            //std::cout << normalizedRay;
+            float res = normalizedRay*(ray.origin - this->position)*-1.0;
             return (normalizedRay*res).setOrigin(ray.origin).getPointReached();
         }else{
-            float res1 = normalizedRay*(ray.origin - this->position)*-1 + std::sqrt(det);
-            float res2 = normalizedRay*(ray.origin - this->position)*-1 - std::sqrt(det);
+            //std::cout << normalizedRay;
+            float res1 = normalizedRay*(ray.origin - this->position)*-1.0 + std::sqrt(det);
+            float res2 = normalizedRay*(ray.origin - this->position)*-1.0 - std::sqrt(det);
             Point3 point1 = (normalizedRay*res1).setOrigin(ray.origin).getPointReached();
             Point3 point2 = (normalizedRay*res2).setOrigin(ray.origin).getPointReached();
 

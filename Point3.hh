@@ -31,6 +31,14 @@ public:
         this->z = z;
     }
 
+    bool equal(Point3& point){
+        return (x == point.x && y == point.y && z == point.z);
+    }
+
+    bool operator!=(Point3& point){
+        return (x != point.x || y != point.y || z != point.z);
+    }
+
 };
 
 std::ostream& operator<<(std::ostream& out, const Point3& point){

@@ -85,7 +85,7 @@ public:
         Vector3 linearRepresentationRotation = (x1 + x2) * projectionOnOrthogonalAxis.magnitude();
 
         Vector3 result = linearRepresentationRotation + projectionOnAxis;
-        return result / result.magnitude();
+        return (result / result.magnitude()).setOrigin(origin);
 
     }
 

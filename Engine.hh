@@ -36,6 +36,10 @@ public:
         float kd = std::get<std::vector<float>>(textureInfos)[0];
         for (Light* light : scene.lights) {
             Vector3 L = normalize(Vector3(light->position, intersectionPoint));
+            /*if (!checkCollisions(L).empty()) {
+                //std::cout << "no light !";
+                continue;
+            }*/
             float I = light->intensity;
             float d = Vector3(intersectionPoint, light->position).magnitude();
             color = color + (objectColor * (N*L) * kd * I); //* (1/std::sqrt(d));
@@ -58,6 +62,9 @@ public:
         Vector3 S = N.rotateAxis(rotationAxis, rotationAngle);
         for (Light* light : scene.lights) {
             Vector3 L = normalize(Vector3(light->position, intersectionPoint));
+            /*if (!checkCollisions(L).empty()) {
+                continue;
+            }*/
             float I = light->intensity;
             float d = Vector3(intersectionPoint, light->position).magnitude();
             color = color + (objectColor * (S*L) * ks * I); //* (1/std::sqrt(d));
@@ -78,24 +85,32 @@ public:
         Vector3 rotationAxis = vectorialProduct(ray, N);
         float rotationAngle = getAngle(ray, N);
         Vector3 S = N.rotateAxis(rotationAxis, rotationAngle).setOrigin(intersectionPoint);
+        //std::cout << ray << S << intersectionPoint << "\n";
+        //if (bounce >= 1)
+           // std::cout << bounce << ": " << intersectionPoint;
         return castRay(S, bounce+1)*ks;
     }
 
-    Color castRay(Vector3 Ray, int bounce){
-
-        //check collisions with all the scene objects
+    std::vector<std::pair<Point3, int>> checkCollisions(Vector3 Ray){
         std::vector<std::pair<Point3, int>> collisions;
         for (int i =0; i < scene.objects.size(); i++){
 
             std::optional<Point3> collision = scene.objects[i]->intersect(Ray);
-            if (collision != std::nullopt) {
-                //std::cout << "collision !";
+            if (collision != std::nullopt /*&& !collision.value().equal(Ray.origin)*/) {
+                //std::cout << bounce << " collision ! " << collision.value() << Ray.origin << "\n";
                 collisions.push_back(std::make_pair(Point3(collision.value()), i));
             }
         }
+        return collisions;
+    }
+
+    Color castRay(Vector3 Ray, int bounce){
+        //check collisions with all the scene objects
+        std::vector<std::pair<Point3, int>> collisions = checkCollisions(Ray);
 
         //if no collisions then return black color
         if (collisions.empty()){
+            //return Color(0,181,226);
             return Color(0,0,0);
         }
 
@@ -112,11 +127,11 @@ public:
         Object* intersectedObject = this->scene.objects[std::get<int>(nearestCollision)];
         Point3 intersectionPoint = std::get<Point3>(nearestCollision);
 
-        //apply diffusion
+        //apply diffusion and specular
         Color color = applyDiffusion(intersectedObject, intersectionPoint)
                 + applySpecular(intersectedObject, intersectionPoint);
 
-        if (bounce <= maxBounce)
+        if (bounce < maxBounce)
             color = color + applyReflexion(intersectedObject, intersectionPoint, bounce);
         //std::cout << "(" << color.red << "," << color.green << "," << color.blue << ") ";
 
@@ -136,7 +151,7 @@ public:
             for (int j = 1; j < width+1; j++){
                 Vector3 pixelFinderRight = (rightDirection/width*j).setOrigin(pixelFinderDown.getPointReached());
                 Vector3 Ray = Vector3(pixelFinderRight.getPointReached(), scene.camera.center);
-                image.pixels[i-1][j-1] = castRay(Ray, 1);
+                image.pixels[i-1][j-1] = castRay(Ray, 0);
             }
         }
         return image;

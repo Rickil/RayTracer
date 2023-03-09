@@ -28,7 +28,7 @@ Vector3 vectorialProduct(Vector3 u, Vector3 v){
 }
 
 Vector3 normalize(Vector3 v){
-    return v / v.magnitude();
+    return (v / v.magnitude()).setOrigin(v.origin);
 }
 
 float getAngle(Vector3 u, Vector3 v){
