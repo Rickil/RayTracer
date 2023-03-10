@@ -152,8 +152,8 @@ public:
             for (int j = 1; j < width+1; j++){
                 Vector3 pixelFinderRight = (rightDirection/width*j).setOrigin(pixelFinderDown.getPointReached());
                 Vector3 Ray = Vector3(pixelFinderRight.getPointReached(), scene.camera.center);
-                if (j == 636 && i == 292)
-                    debug = true;
+                /*if (j == 636 && i == 292)
+                    debug = true;*/
                 image.pixels[i-1][j-1] = castRay(Ray, 0);
             }
         }

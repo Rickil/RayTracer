@@ -32,23 +32,32 @@ public:
     }
 
     std::optional<Point3> intersect(Vector3 ray){
+        const float EPSILON = 0.0001;
+
         //we get vector from camera center to triangle edges
-        Vector3 OA(a, ray.origin);
-        Vector3 OB(b, ray.origin);
-        Vector3 OC(c, ray.origin);
+        Vector3 edge1(this->b,this->a);
+        Vector3 edge2(this->c,this->a);
 
-        //we find the coeffs alpha, beta and gamma
-        float alpha = 0;
-        float beta = 0;
-        float gamma = 0;
+        Vector3 h = vectorialProduct(ray, edge2);
+        float a = edge1*h;
+        if (a > -EPSILON && a < EPSILON)
+            return std::nullopt;
 
-        if ((alpha >= 0 && beta >=0 && gamma >= 0) ||(alpha <= 0 && beta <=0 && gamma <= 0)) {
-            //we get intersection
-            Vector3 OG = (OA * alpha + OB * beta + OC * gamma) / (alpha + beta + gamma);
-            //std::cout << OG;
-            return OG.setOrigin(ray.origin).getPointReached();
-        } else {
-            //no intersection
+        float f = 1.0/a;
+        Vector3 s = Vector3(ray.origin, this->a);
+        float u = s*h*f;
+        if (u < 0.0 || u > 1.0)
+            return std::nullopt;
+
+        Vector3 q = vectorialProduct(s, edge1);
+        float v = ray*q*f;
+        if (v < 0.0 || u + v > 1.0)
+            return std::nullopt;
+
+        float t = edge2*q*f;
+        if (t > EPSILON){
+            return (ray*t).setOrigin(ray.origin).getPointReached();
+        }else{
             return std::nullopt;
         }
     }
@@ -58,7 +67,7 @@ public:
         Vector3 AB(b, a);
         Vector3 AC(c, a);
 
-        return normalize(vectorialProduct(AB, AC)).setOrigin(point);
+        return normalize(vectorialProduct(AC, AB)).setOrigin(point);
     }
 
     std::pair<Color, std::vector<float>> getTexture(Point3 point){
