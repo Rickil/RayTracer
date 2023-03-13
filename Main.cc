@@ -19,8 +19,8 @@ int main(){
     Sphere* sphere4 = new Sphere(uniformTexture4, Point3(-1,0.5,6), 0.5);
     Rectangle* rectangleBottom = new Rectangle(uniformTextureSky, Point3(-25,0,-25),
                                          Vector3(0,0,50), Vector3(50,0,0));
-    Triangle* triangle = new Triangle(uniformTexture3, Point3(-1,3,5),
-                                      Point3(0,5,5), Point3(1,3,5));
+    Triangle* triangle = new Triangle(uniformTexture, Point3(-1,0,4),
+                                      Point3(0,4,5), Point3(1,0,4));
     Camera camera(Point3(0,10,6), Point3(0,0,6),Vector3(0,0,1)
                   ,70,70);
     Point_Light* pointLight = new Point_Light(0.8, Point3(0,5,5.5));
