@@ -31,6 +31,18 @@ public:
         this->z = z;
     }
 
+    Point3 addX(float v){
+        return Point3(x+v, y, z);
+    }
+
+    Point3 addY(float v){
+        return Point3(x, y+v, z);
+    }
+
+    Point3 addZ(float v){
+        return Point3(x, y, z+v);
+    }
+
     bool operator!=(Point3& point){
         return (x != point.x || y != point.y || z != point.z);
     }
