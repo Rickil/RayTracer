@@ -16,7 +16,7 @@ public:
 
     PotentialPoint(const Point3 &position, float potential) : position(position), potential(potential) {}
 
-    float decayFunction(Point3 point){
+    float getPotential(Point3 point){
         float distance = dist(position, point);
         if (distance <= 1)
             return 1;

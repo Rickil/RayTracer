@@ -6,7 +6,7 @@
 #define TP1_RAYTRACING_BLOB_HH
 #define e 50
 #define d 0.1
-#define isoLevelRequired 1
+#define S 1
 #define cubeOriginX -25
 #define cubeOriginY -25
 #define cubeOriginZ -25
@@ -50,6 +50,15 @@ public:
             for (int y = 0; y < e-d; y+=d){
                 for (int z = 0; z < e-d; z+=d){
                     std::vector<Point3> corners = getCube(x, y , z);
+                    int index = 0;
+                    for (int i = 0; i < corners.size(); i++){
+                        float potential = 0;
+                        for (PotentialPoint potentialPoint : potentialPoints){
+                            potential += potentialPoint.getPotential(corners[i]);
+                        }
+                        if (potential < S)
+                            index |= intPow(2,i);
+                    }
                 }
             }
         }
