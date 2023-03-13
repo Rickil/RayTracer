@@ -5,14 +5,24 @@
 #ifndef TP1_RAYTRACING_POTENTIALPOINT_HH
 #define TP1_RAYTRACING_POTENTIALPOINT_HH
 
+#include "Point3.hh"
+#include "tools.hh"
+#include <cmath>
+
 class PotentialPoint{
 public:
-    float x;
-    float y;
-    float z;
+    Point3 position;
     float potential;
 
-    PotentialPoint(float x, float y, float z, float potential) : x(x), y(y), z(z), potential(potential) {}
+    PotentialPoint(const Point3 &position, float potential) : position(position), potential(potential) {}
+
+    float decayFunction(Point3 point){
+        float distance = dist(position, point);
+        if (distance <= 1)
+            return 1;
+        else
+            return std::exp(-distance);
+    }
 };
 
 
