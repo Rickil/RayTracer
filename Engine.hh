@@ -35,7 +35,7 @@ public:
         std::pair<Color, std::vector<float>> textureInfos = intersectedObject->getTexture(intersectionPoint);
         Color objectColor = std::get<Color>(textureInfos);
         Vector3 N = intersectedObject->getNormal(intersectionPoint);
-        if (Vector3(intersectionPoint, scene.camera.center)*N > 0)
+        if (Vector3(intersectionPoint, scene.camera.center)*N > 0 && intersectedObject->backFaceCurling)
             N = N*-1;
         float kd = std::get<std::vector<float>>(textureInfos)[0];
         for (Light* light : scene.lights) {
@@ -61,7 +61,7 @@ public:
         float ks = std::get<std::vector<float>>(textureInfos)[1];
         Vector3 N = intersectedObject->getNormal(intersectionPoint);
         //std::cout << N << "\n";
-        if (Vector3(intersectionPoint, scene.camera.center)*N > 0) {
+        if (Vector3(intersectionPoint, scene.camera.center)*N > 0 && intersectedObject->backFaceCurling) {
             //std::cout << " wrong direction !";
             N = N * -1;
         }

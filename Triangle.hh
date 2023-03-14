@@ -16,6 +16,7 @@ public:
         this->a = a;
         this->b = b;
         this->c = c;
+        this->backFaceCurling = true;
     }
 
     float getCoeffs(Vector3 u, Vector3 v){
