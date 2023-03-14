@@ -4,6 +4,7 @@
 #include "Scene.hh"
 #include "Image.hh"
 #include "Vector3.hh"
+#include "Triangle.hh"
 #include <vector>
 #include <utility>
 #include <iostream>
@@ -14,7 +15,7 @@ public:
     int width;
     int height;
     int maxBounce;
-    bool debug;
+    bool debug = false;
 
     Vector3 axisX = Vector3(1,0,0);
     Vector3 axisY = Vector3(0,1,0);
@@ -28,12 +29,14 @@ public:
         this->maxBounce = maxBounce;
     }
 
-    Color applyDiffusion(Object* intersectedObject, Point3 intersectionPoint){
+    Color applyDiffusion(Object* intersectedObject, Point3 intersectionPoint, Vector3 ray){
         Color color;
 
         std::pair<Color, std::vector<float>> textureInfos = intersectedObject->getTexture(intersectionPoint);
         Color objectColor = std::get<Color>(textureInfos);
         Vector3 N = intersectedObject->getNormal(intersectionPoint);
+        if (Vector3(intersectionPoint, scene.camera.center)*N > 0)
+            N = N*-1;
         float kd = std::get<std::vector<float>>(textureInfos)[0];
         for (Light* light : scene.lights) {
             Vector3 L = normalize(Vector3(light->position, intersectionPoint));
@@ -57,6 +60,11 @@ public:
         Color objectColor = std::get<Color>(textureInfos);
         float ks = std::get<std::vector<float>>(textureInfos)[1];
         Vector3 N = intersectedObject->getNormal(intersectionPoint);
+        //std::cout << N << "\n";
+        if (Vector3(intersectionPoint, scene.camera.center)*N > 0) {
+            //std::cout << " wrong direction !";
+            N = N * -1;
+        }
         Vector3 rotationAxis = vectorialProduct(ray, N);
         float rotationAngle = getAngle(ray, N);
         Vector3 S = N.rotateAxis(rotationAxis, rotationAngle);
@@ -81,11 +89,14 @@ public:
         std::pair<Color, std::vector<float>> textureInfos = intersectedObject->getTexture(intersectionPoint);
         float ks = std::get<std::vector<float>>(textureInfos)[1];
         Vector3 N = intersectedObject->getNormal(intersectionPoint);
+        if (Vector3(intersectionPoint, scene.camera.center)*N < 0)
+            N = N*-1;
         Vector3 rotationAxis = vectorialProduct(ray, N);
         float rotationAngle = getAngle(ray, N);
         Vector3 S = N.rotateAxis(rotationAxis, rotationAngle).setOrigin(intersectionPoint);
         if (debug) {
-            std::cout << ray << ray.origin << S << intersectionPoint << "\n";
+            /*std::cout << ray << ray.origin << S << intersectionPoint << "\n";*/
+            std::cout << ((Triangle*)intersectedObject)->a << ((Triangle*)intersectedObject)->b << ((Triangle*)intersectedObject)->c << "\n";
         }
         //if (bounce >= 1)
            // std::cout << bounce << ": " << intersectionPoint;
@@ -129,7 +140,7 @@ public:
         Point3 intersectionPoint = std::get<Point3>(nearestCollision);
 
         //apply diffusion and specular
-        Color color = applyDiffusion(intersectedObject, intersectionPoint)
+        Color color = applyDiffusion(intersectedObject, intersectionPoint, Ray)
                 + applySpecular(intersectedObject, Ray, intersectionPoint);
 
         if (bounce < maxBounce)
@@ -137,6 +148,8 @@ public:
         //std::cout << "(" << color.red << "," << color.green << "," << color.blue << ") ";
 
 
+        /*if (color.red == 0 && color.green == 0 && color.blue == 0)
+            std::cout << ((Triangle*)intersectedObject)->a << ((Triangle*)intersectedObject)->b << ((Triangle*)intersectedObject)->c << "\n";*/
         //return final pixel color
         return color;
     }
@@ -152,8 +165,8 @@ public:
             for (int j = 1; j < width+1; j++){
                 Vector3 pixelFinderRight = (rightDirection/width*j).setOrigin(pixelFinderDown.getPointReached());
                 Vector3 Ray = Vector3(pixelFinderRight.getPointReached(), scene.camera.center);
-                /*if (j == 636 && i == 292)
-                    debug = true;*/
+                if (j == 535 && i == 586)
+                    debug = true;
                 image.pixels[i-1][j-1] = castRay(Ray, 0);
             }
         }

@@ -18,10 +18,11 @@ public:
 
     float getPotential(Point3 point){
         float distance = dist(position, point);
-        if (distance <= 1)
+        /*if (distance <= 1)
             return 1;
         else
-            return std::exp(-distance);
+            return std::exp(-distance);*/
+        return std::exp(-distance);
     }
 };
 

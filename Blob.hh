@@ -4,12 +4,12 @@
 
 #ifndef TP1_RAYTRACING_BLOB_HH
 #define TP1_RAYTRACING_BLOB_HH
-#define e 50
+#define e 20
 #define d 0.5
-#define S 1
-#define cubeOriginX -25
-#define cubeOriginY -25
-#define cubeOriginZ -25
+#define S 0.5
+#define cubeOriginX -10
+#define cubeOriginY 0
+#define cubeOriginZ 0
 
 
 #include "PotentialPoint.hh"
@@ -54,7 +54,6 @@ public:
             for (PotentialPoint potentialPoint : potentialPoints){
                 potential += potentialPoint.getPotential(corners[i]);
             }
-            //std::cout << potential << "\n";
             if (potential < S)
                 index |= intPow(2,i);
         }
@@ -96,6 +95,7 @@ public:
                 Point3 a = getPointFromVertex(vertices[i], position);
                 Point3 b = getPointFromVertex(vertices[i+1], position);
                 Point3 c = getPointFromVertex(vertices[i+2], position);
+                std::cout << a << b << c << "\n";
                 objects->push_back(new Triangle(textureMaterial, a, b, c));
             }else{
                 break;
