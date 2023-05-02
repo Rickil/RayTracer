@@ -23,22 +23,17 @@ public:
 
     std::optional<Point3> intersect(Vector3 ray){
         Vector3 normalizedRay = normalize(ray);
-        //std::cout << ray << "  " << normalizedRay;
-        //std::cout << normalizedRay.magnitude() << "\n";
         float det = square(normalizedRay*(ray.origin - this->position))
                 -(norm(ray.origin - this->position) - square(this->size));
-        //std::cout << det << "\n";
         if (det < 0)
             return std::nullopt;
         else if (det == 0){
-            //std::cout << normalizedRay;
             float res = normalizedRay*(ray.origin - this->position)*-1.0;
             if (res > 0)
                 return (normalizedRay*res).setOrigin(ray.origin).getPointReached();
             else
                 return std::nullopt;
         }else{
-            //std::cout << normalizedRay;
             float res1 = (normalizedRay*(ray.origin - this->position))*-1.0 + std::sqrt(det);
             float res2 = (normalizedRay*(ray.origin - this->position))*-1.0 - std::sqrt(det);
 
@@ -52,6 +47,7 @@ public:
             < Vector3(point2, ray.origin).magnitude()) ? point1 : point2;
         }
     }
+
     Vector3 getNormal(Point3 point){
 
         //we get the normal direction by taking the vector from center to intersection point

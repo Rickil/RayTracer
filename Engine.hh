@@ -122,8 +122,8 @@ public:
 
         //if no collisions then return black color
         if (collisions.empty()){
-            return Color(0,181,226);
-            //return Color(0,0,0);
+            //return Color(0,181,226);
+            return Color(0,0,0);
         }
 
         std::pair<Point3, int> nearestCollision = collisions[0];
