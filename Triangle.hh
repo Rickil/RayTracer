@@ -4,6 +4,8 @@
 #include "Object.hh"
 #include "tools.hh"
 #include <iostream>
+#include <fstream>
+#include <string>
 
 class Triangle : public Object{
 public:
@@ -74,6 +76,14 @@ public:
     std::pair<Color, std::vector<float>> getTexture(Point3 point){
         return this->textureMaterial->response(point);
     }
+
+    void debug(){
+        std::cout << "f "
+                  << "[" << this->a.x << ", " << this->a.y << ", " << this->a.z << "] "
+                  << "[" << this->b.x << ", " << this->b.y << ", " << this->b.z << "] "
+                  << "[" << this->c.x << ", " << this->c.y << ", " << this->c.z << "]" << std::endl;
+    }
+
 };
 
 

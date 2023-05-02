@@ -64,6 +64,10 @@ public:
         return this->textureMaterial->response(point);
     }
 
+    void debug(){
+        std::cout << "center: " << position << " radius: " << size << std::endl;
+    }
+
 };
 
 #endif //TP1_RAYTRACING_SPHERE_HH

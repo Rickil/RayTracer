@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(.)
 
+add_compile_options(-O3)
+
 add_executable(TP1_RayTracing
         Main.cc
         Vector3.hh

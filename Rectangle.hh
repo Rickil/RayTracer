@@ -57,6 +57,13 @@ public:
     std::pair<Color, std::vector<float>> getTexture(Point3 point){
         return this->textureMaterial->response(point);
     }
+
+    void debug(){
+        std::cout << "origin: " << origin
+        << " width: " << width
+        << " height: " << height
+        << std::endl;
+    }
 };
 
 

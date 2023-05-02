@@ -10,6 +10,7 @@
 #include "Vector3.hh"
 #include <iostream>
 #include <cmath>
+#include <string>
 
 float square(float number){
     return number*number;
@@ -33,6 +34,10 @@ Vector3 normalize(Vector3 v){
 
 float getAngle(Vector3 u, Vector3 v){
     return std::acos((u*v)/(u.magnitude()*v.magnitude()));
+}
+
+Vector3 matMul(const Vector3& a, const Vector3& b){
+    return {a.x*b.x, a.y*b.y, a.z*b.z};
 }
 
 int intPow(int base, int exp)
