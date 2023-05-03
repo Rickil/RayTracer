@@ -99,7 +99,7 @@ public:
             std::cout << ((Triangle*)intersectedObject)->a << ((Triangle*)intersectedObject)->b << ((Triangle*)intersectedObject)->c << "\n";
         }
         //if (bounce >= 1)
-           // std::cout << bounce << ": " << intersectionPoint;
+        // std::cout << bounce << ": " << intersectionPoint;
         auto res = castRay(S, bounce+1)*ks;
         debug = false;
         return res;
@@ -114,6 +114,37 @@ public:
             }
         }
         return collisions;
+    }
+
+    float sdf(Point3 position){
+
+        return Vector3(position).magnitude() - 0.2;
+    }
+
+    Color shade(Point3 position){
+        return Color(255,255,255);
+    }
+
+    Color rayMarch(Vector3 ray){
+        Color pxl = Color(0,0,0);
+        float dist;
+        Point3 pos = scene.camera.center;
+        float max = 9999.0f;
+        for (int i = 0; i < 150; i++) {
+            if (fabs(pos.x) > max
+                || fabs(pos.y) > max
+                || fabs(pos.z) > max)
+                break;
+            dist = sdf(pos);
+            if (dist < 1e-6) {
+                pxl = shade(pos);
+                break;
+            }
+
+            pos = (ray * dist) + pos;
+        } // end for (i)
+
+        return pxl;
     }
 
     Color castRay(Vector3 Ray, int bounce){
@@ -141,7 +172,7 @@ public:
 
         //apply diffusion and specular
         Color color = applyDiffusion(intersectedObject, intersectionPoint, Ray)
-                + applySpecular(intersectedObject, Ray, intersectionPoint);
+                      + applySpecular(intersectedObject, Ray, intersectionPoint);
 
         if (bounce < maxBounce)
             color = color + applyReflexion(intersectedObject, Ray, intersectionPoint, bounce);
@@ -167,7 +198,8 @@ public:
                 Vector3 Ray = Vector3(pixelFinderRight.getPointReached(), scene.camera.center);
                 if (j == 535 && i == 586)
                     debug = true;
-                image.pixels[i-1][j-1] = castRay(Ray, 0);
+                //image.pixels[i-1][j-1] = castRay(Ray, 0);
+                image.pixels[i-1][j-1] = rayMarch(Ray);
             }
         }
         return image;

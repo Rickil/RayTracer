@@ -26,6 +26,13 @@ public:
         this->z = z;
     }
 
+    Vector3(Point3 p){
+        this->x = p.x;
+        this->y = p.y;
+        this->z = p.z;
+    }
+
+
     Vector3(Point3 origin, float x, float y, float z){
         this->x = x;
         this->y = y;

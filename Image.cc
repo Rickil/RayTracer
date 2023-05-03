@@ -1,6 +1,5 @@
 #include "Image.hh"
 #include <string>
-#include <iostream>
 #include <fstream>
 
 void Image::savePPM(std::string path) {
