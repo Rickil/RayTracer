@@ -16,4 +16,4 @@ add_executable(TP1_RayTracing
         Object.hh
         Texture_Material.hh
         Uniform_Texture.hh
-        Sphere.hh tools.hh Light.hh Point_Light.hh Point3.hh Camera.hh Scene.hh Engine.hh Rectangle.hh Triangle.hh Blob.hh PotentialPoint.hh Sierpinski.hh)
+        Sphere.hh tools.hh Light.hh Point_Light.hh Point3.hh Camera.hh Scene.hh Engine.hh Rectangle.hh Triangle.hh Blob.hh PotentialPoint.hh Sierpinski.hh SDF.hh)

@@ -5,6 +5,7 @@
 #include "Image.hh"
 #include "Vector3.hh"
 #include "Triangle.hh"
+#include "SDF.hh"
 #include <vector>
 #include <utility>
 #include <iostream>
@@ -15,7 +16,7 @@ public:
     int width;
     int height;
     int maxBounce;
-    bool debug = false;
+    bool debug = true;
 
     Vector3 axisX = Vector3(1,0,0);
     Vector3 axisY = Vector3(0,1,0);
@@ -35,7 +36,7 @@ public:
         std::pair<Color, std::vector<float>> textureInfos = intersectedObject->getTexture(intersectionPoint);
         Color objectColor = std::get<Color>(textureInfos);
         Vector3 N = intersectedObject->getNormal(intersectionPoint);
-        if (Vector3(intersectionPoint, scene.camera.center)*N > 0 && intersectedObject->backFaceCurling)
+        if (Vector3(intersectionPoint, scene.camera.center)*N > 0 /*&& intersectedObject->backFaceCurling*/)
             N = N*-1;
         float kd = std::get<std::vector<float>>(textureInfos)[0];
         for (Light* light : scene.lights) {
@@ -61,7 +62,7 @@ public:
         float ks = std::get<std::vector<float>>(textureInfos)[1];
         Vector3 N = intersectedObject->getNormal(intersectionPoint);
         //std::cout << N << "\n";
-        if (Vector3(intersectionPoint, scene.camera.center)*N > 0 && intersectedObject->backFaceCurling) {
+        if (Vector3(intersectionPoint, scene.camera.center)*N > 0 /*&& intersectedObject->backFaceCurling*/) {
             //std::cout << " wrong direction !";
             N = N * -1;
         }
@@ -116,18 +117,42 @@ public:
         return collisions;
     }
 
-    float sdf(Point3 position){
+    SDF sdf(Point3 position){
+        //std::cout << "1 ";
+        float min = 9999999;
+        Point3 point;
+        Object* intersectedObject;
+        for (Object* object : scene.objects){
+            std::optional<Point3> intersectionPoint = object->intersect(Vector3(object->position, position));
+            float dist = Vector3(intersectionPoint.value(), position).magnitude();
+            if (dist < min){
+                min = dist;
+                intersectedObject = object;
+                point = intersectionPoint.value();
+            }
+        }
 
-        return Vector3(position).magnitude() - 0.2;
+        return SDF(min, point,intersectedObject, Vector3(intersectedObject->position, position));
     }
 
-    Color shade(Point3 position){
-        return Color(255,255,255);
+    Color shade(SDF sdf){
+        if (sdf.intersectedObject != nullptr) {
+            Color color = std::get<0>(sdf.intersectedObject->getTexture(sdf.intersectionPoint));
+            /*Color color = applyDiffusion(sdf.intersectedObject, sdf.intersectionPoint, sdf.ray);*/
+            //applySpecular(sdf.intersectedObject, sdf.ray, sdf.intersectionPoint);
+            return color;
+        }
+        else
+            return Color(255,255,255);
     }
 
     Color rayMarch(Vector3 ray){
+        float dp = 0;
+        Vector3 u = normalize(ray);
         Color pxl = Color(0,0,0);
         float dist;
+        Object* intersectedObject;
+        Point3* intersectedPoint;
         Point3 pos = scene.camera.center;
         float max = 9999.0f;
         for (int i = 0; i < 150; i++) {
@@ -135,19 +160,26 @@ public:
                 || fabs(pos.y) > max
                 || fabs(pos.z) > max)
                 break;
-            dist = sdf(pos);
-            if (dist < 1e-6) {
-                pxl = shade(pos);
+            SDF result = sdf(pos);
+            dist = result.dist;
+            dp += dist;
+            if (dp >= ray.magnitude())
+                return pxl;
+            if (dist < 0.01) {
+                if (fabs(dp - ray.magnitude()) < 0.01)
+                    return pxl;
+                pxl = shade(result);
                 break;
             }
 
-            pos = (ray * dist) + pos;
+            pos = (u * dist) + pos;
         } // end for (i)
-
         return pxl;
     }
 
     Color castRay(Vector3 Ray, int bounce){
+        std::cout << "3 ";
+
         //check collisions with all the scene objects
         std::vector<std::pair<Point3, int>> collisions = checkCollisions(Ray);
 
@@ -196,9 +228,9 @@ public:
             for (int j = 1; j < width+1; j++){
                 Vector3 pixelFinderRight = (rightDirection/width*j).setOrigin(pixelFinderDown.getPointReached());
                 Vector3 Ray = Vector3(pixelFinderRight.getPointReached(), scene.camera.center);
-                if (j == 535 && i == 586)
+                if (j == 530 && i == 530)
                     debug = true;
-                //image.pixels[i-1][j-1] = castRay(Ray, 0);
+                //image.pixels[i-1][j-1] = castRay(Ray, 1);
                 image.pixels[i-1][j-1] = rayMarch(Ray);
             }
         }

@@ -43,7 +43,7 @@ public:
         return Point3(x, y, z+v);
     }
 
-    bool operator!=(Point3& point){
+    bool operator!=(Point3 point){
         return (x != point.x || y != point.y || z != point.z);
     }
 

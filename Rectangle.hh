@@ -12,14 +12,13 @@
 
 class Rectangle : public Object{
 public:
-    Point3 origin;
     Vector3 width;
     Vector3 height;
     Vector3 normal;
 
     Rectangle(Texture_Material* textureMaterial, Point3 origin, Vector3 width, Vector3 height){
         this->textureMaterial = textureMaterial;
-        this->origin = origin;
+        this->position = origin;
         this->width = width;
         this->height = height;
         this->normal = normalize(vectorialProduct(width, height)).setOrigin(origin);
@@ -32,14 +31,14 @@ public:
 
         //intersection point P = ray.origin + a*Normalize(Ray)
         //we need to find a
-        float a = ((origin-ray.origin)*normal)/(normalize(ray)*normal);
+        float a = ((position-ray.origin)*normal)/(normalize(ray)*normal);
         Point3 intersectionPoint = (normalize(ray)*a).setOrigin(ray.origin).getPointReached();
         //std::cout << "(" << intersectionPoint.x << "," << intersectionPoint.y << "," << intersectionPoint.z << ") ";
 
         //we check if the point is in the rectangle
-        Vector3 Q1 = width*((Vector3(intersectionPoint, origin)*width)/
+        Vector3 Q1 = width*((Vector3(intersectionPoint, position)*width)/
                 (norm(width)));
-        Vector3 Q2 = height*((Vector3(intersectionPoint, origin)*height)/
+        Vector3 Q2 = height*((Vector3(intersectionPoint, position)*height)/
                      (norm(height)));
 
         if (0 <= Q1.magnitude() && Q1.magnitude() <= width.magnitude()
@@ -59,7 +58,7 @@ public:
     }
 
     void debug(){
-        std::cout << "origin: " << origin
+        std::cout << "origin: " << position
         << " width: " << width
         << " height: " << height
         << std::endl;

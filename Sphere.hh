@@ -7,7 +7,6 @@
 class Sphere : public Object{
 
 public:
-    Point3 position;
     float size;
 
     Sphere(Texture_Material* textureMaterial, Point3 position, float size) {
