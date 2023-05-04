@@ -10,6 +10,7 @@
 #include <vector>
 #include <utility>
 #include <iostream>
+#include <thread>
 
 class Engine {
 public:
@@ -118,51 +119,11 @@ public:
         return collisions;
     }
 
-    SDF sdf(Point3 position){
-        //std::cout << "1 ";
-        float min = 9999999;
-        Point3 point;
-        Object* intersectedObject;
-        for (Object* object : scene.objects){
-            std::optional<Point3> intersectionPoint = object->intersect(Vector3(object->position, position));
-            float dist = Vector3(intersectionPoint.value(), position).magnitude();
-            if (dist < min){
-                min = dist;
-                intersectedObject = object;
-                point = intersectionPoint.value();
-            }
-        }
-
-        return SDF(min, point,intersectedObject, Vector3(intersectedObject->position, position));
-    }
-
-    Color shade(SDF sdf){
-        if (sdf.intersectedObject != nullptr) {
-            Color color = std::get<0>(sdf.intersectedObject->getTexture(sdf.intersectionPoint));
-            /*Color color = applyDiffusion(sdf.intersectedObject, sdf.intersectionPoint, sdf.ray)+
-            applySpecular(sdf.intersectedObject, sdf.ray, sdf.intersectionPoint);*/
-            return color;
-        }
-        else
-            return Color(255,255,255);
-    }
-
-    Color shade(Vector3 ray, Object* mandelbulb){
-        Color color = applyDiffusion(mandelbulb, ray.getPointReached(), ray);
-                      //applySpecular(mandelbulb, ray, ray.getPointReached());
-        return color;
-        //return Color(50,0,0);
-    }
-
     Color rayMarch(Vector3 ray, float power){
         float dp = 0;
         Vector3 u = normalize(ray);
         Color pxl = Color(0,0,0);
         float dist;
-        Uniform_Texture* uniformTexture = new Uniform_Texture(Color(225,35,40), 0.5, 0.5);
-        Object* mandelbulb = new Mandelbulb(uniformTexture, power);
-        Object* intersectedObject;
-        Point3* intersectedPoint;
         Point3 pos = scene.camera.center;
         float max = 9999.0f;
         for (int i = 0; i < 150; i++) {
@@ -170,21 +131,13 @@ public:
                 || fabs(pos.y) > max
                 || fabs(pos.z) > max)
                 break;
-            //SDF result = sdf(pos);
             dist = DE(pos, power);
             dp += dist;
-            //std::cout << dist << '\n';
             if (dp >= ray.magnitude())
                 return pxl;
-            if (dist < 0.0001) {
-                /*if (fabs(dp - ray.magnitude()) < 0.01)
-                    return pxl;*/
-                //pxl = shade(result);
-                //pxl = shade(u*dp, mandelbulb);
+            if (dist < 0.001) {
                 dp = 2*dp*PI;
                 pxl = Color(int(dp*sinf(dp))%255, int(dp*dp)%255, int(dp)%255);
-                /*int v = 3*int(dp) % 255;
-                pxl = Color(v,v,v);*/
                 break;
             }
 
@@ -234,12 +187,31 @@ public:
     }
 
     Image generateImage(float power){
+        const int nb_threads = std::thread::hardware_concurrency();
         Image image(width, height);
         std::vector<Vector3> planInfos = scene.camera.buildImagePlan();
         Vector3 refVector = planInfos[0];
         Vector3 rightDirection = planInfos[1];
         Vector3 downDirection = planInfos[2];
-        for (int i = 1; i < height+1; i++){
+
+        const int section_width = width / nb_threads;
+        std::vector<std::thread> threads;
+        for (int t = 0; t < nb_threads; t++){
+            int x_start = t * section_width;
+            int x_end = (t + 1) * section_width;
+            threads.emplace_back([&, x_start, x_end]() {
+                // render each pixel in the section
+                for (int y = 0; y < height; ++y) {
+                    for (int x = x_start; x < x_end; ++x) {
+                        Vector3 pixelFinderDown = (downDirection/height*(y+1)).setOrigin(refVector.getPointReached());
+                        Vector3 pixelFinderRight = (rightDirection/width*(x+1)).setOrigin(pixelFinderDown.getPointReached());
+                        Vector3 Ray = Vector3(pixelFinderRight.getPointReached(), scene.camera.center);
+                        image.pixels[y][x] = rayMarch(Ray, power);
+                    }
+                }
+            });
+        }
+        /*for (int i = 1; i < height+1; i++){
             Vector3 pixelFinderDown = (downDirection/height*i).setOrigin(refVector.getPointReached());
             for (int j = 1; j < width+1; j++){
                 Vector3 pixelFinderRight = (rightDirection/width*j).setOrigin(pixelFinderDown.getPointReached());
@@ -249,7 +221,13 @@ public:
                 //image.pixels[i-1][j-1] = castRay(Ray, 1);
                 image.pixels[i-1][j-1] = rayMarch(Ray, power);
             }
+        }*/
+
+        // wait for all threads to finish
+        for (auto& thread : threads) {
+            thread.join();
         }
+
         return image;
     }
 };
