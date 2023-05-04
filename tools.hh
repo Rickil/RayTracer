@@ -56,6 +56,32 @@ int intPow(int base, int exp)
     return result;
 }
 
+float DE(Vector3 pos) {
+    Vector3 z = pos;
+    float dr = 1.0;
+    float r;
+    float power = 5;
+    for (int i = 0; i < 15 ; i++) {
+        r = z.magnitude();
+        if (r>5) break;
+
+        // convert to polar coordinates
+        float theta = std::acos(z.z/r);
+        float phi = std::atan2(z.y,z.x);
+        dr =  power*pow( r, power-1.0)*dr + 1.0;
+
+        // scale and rotate the point
+        float zr = pow( r,power);
+        theta = theta*power;
+        phi = phi*power;
+
+        // convert back to cartesian coordinates
+        z = Vector3(pos.origin, sin(theta)*cos(phi), sin(phi)*sin(theta), cos(theta))*zr;
+        z=z+pos;
+    }
+    return 0.5*log(r)*r/dr;
+}
+
 int frontiers[256][15] = {
         {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
         {0, 8, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},

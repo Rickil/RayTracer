@@ -5,6 +5,7 @@
 #include "Image.hh"
 #include "Vector3.hh"
 #include "Triangle.hh"
+#include "Mandelbulb.hh"
 #include "SDF.hh"
 #include <vector>
 #include <utility>
@@ -41,10 +42,10 @@ public:
         float kd = std::get<std::vector<float>>(textureInfos)[0];
         for (Light* light : scene.lights) {
             Vector3 L = normalize(Vector3(light->position, intersectionPoint));
-            if (!checkCollisions(L).empty()) {
+            /*if (!checkCollisions(L).empty()) {
                 //std::cout << "no light !";
                 continue;
-            }
+            }*/
             float I = light->intensity;
             float d = Vector3(intersectionPoint, light->position).magnitude();
             color = color + (objectColor * (N*L) * kd * I); //* (1/std::sqrt(d));
@@ -138,12 +139,19 @@ public:
     Color shade(SDF sdf){
         if (sdf.intersectedObject != nullptr) {
             Color color = std::get<0>(sdf.intersectedObject->getTexture(sdf.intersectionPoint));
-            /*Color color = applyDiffusion(sdf.intersectedObject, sdf.intersectionPoint, sdf.ray);*/
-            //applySpecular(sdf.intersectedObject, sdf.ray, sdf.intersectionPoint);
+            /*Color color = applyDiffusion(sdf.intersectedObject, sdf.intersectionPoint, sdf.ray)+
+            applySpecular(sdf.intersectedObject, sdf.ray, sdf.intersectionPoint);*/
             return color;
         }
         else
             return Color(255,255,255);
+    }
+
+    Color shade(Vector3 ray, Object* mandelbulb){
+        Color color = applyDiffusion(mandelbulb, ray.getPointReached(), ray);
+                      //applySpecular(mandelbulb, ray, ray.getPointReached());
+        return color;
+        //return Color(50,0,0);
     }
 
     Color rayMarch(Vector3 ray){
@@ -151,6 +159,8 @@ public:
         Vector3 u = normalize(ray);
         Color pxl = Color(0,0,0);
         float dist;
+        Uniform_Texture* uniformTexture = new Uniform_Texture(Color(127,35,203), 0.5, 0.5);
+        Object* mandelbulb = new Mandelbulb(uniformTexture);
         Object* intersectedObject;
         Point3* intersectedPoint;
         Point3 pos = scene.camera.center;
@@ -160,20 +170,26 @@ public:
                 || fabs(pos.y) > max
                 || fabs(pos.z) > max)
                 break;
-            SDF result = sdf(pos);
-            dist = result.dist;
+            //SDF result = sdf(pos);
+            dist = DE(pos);
             dp += dist;
+            //std::cout << dist << '\n';
             if (dp >= ray.magnitude())
                 return pxl;
-            if (dist < 0.01) {
-                if (fabs(dp - ray.magnitude()) < 0.01)
-                    return pxl;
-                pxl = shade(result);
+            if (dist < 0.001) {
+                /*if (fabs(dp - ray.magnitude()) < 0.01)
+                    return pxl;*/
+                //pxl = shade(result);
+                //pxl = shade(u*dist, mandelbulb);
+                /*dp = 2*dp*PI;
+                pxl = Color(int(dp*sinf(dp))%255, int(dp*3)%255, int(dp)%255);*/
+                int v = 3*int(dp) % 255;
+                pxl = Color(v,v,v);
                 break;
             }
 
             pos = (u * dist) + pos;
-        } // end for (i)
+        }
         return pxl;
     }
 
