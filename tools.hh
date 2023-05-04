@@ -56,11 +56,10 @@ int intPow(int base, int exp)
     return result;
 }
 
-float DE(Vector3 pos) {
+float DE(Vector3 pos, float power) {
     Vector3 z = pos;
     float dr = 1.0;
     float r;
-    float power = 5;
     for (int i = 0; i < 15 ; i++) {
         r = z.magnitude();
         if (r>5) break;

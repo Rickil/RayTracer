@@ -42,10 +42,10 @@ public:
         float kd = std::get<std::vector<float>>(textureInfos)[0];
         for (Light* light : scene.lights) {
             Vector3 L = normalize(Vector3(light->position, intersectionPoint));
-            /*if (!checkCollisions(L).empty()) {
+            if (!checkCollisions(L).empty()) {
                 //std::cout << "no light !";
                 continue;
-            }*/
+            }
             float I = light->intensity;
             float d = Vector3(intersectionPoint, light->position).magnitude();
             color = color + (objectColor * (N*L) * kd * I); //* (1/std::sqrt(d));
@@ -154,13 +154,13 @@ public:
         //return Color(50,0,0);
     }
 
-    Color rayMarch(Vector3 ray){
+    Color rayMarch(Vector3 ray, float power){
         float dp = 0;
         Vector3 u = normalize(ray);
         Color pxl = Color(0,0,0);
         float dist;
-        Uniform_Texture* uniformTexture = new Uniform_Texture(Color(127,35,203), 0.5, 0.5);
-        Object* mandelbulb = new Mandelbulb(uniformTexture);
+        Uniform_Texture* uniformTexture = new Uniform_Texture(Color(225,35,40), 0.5, 0.5);
+        Object* mandelbulb = new Mandelbulb(uniformTexture, power);
         Object* intersectedObject;
         Point3* intersectedPoint;
         Point3 pos = scene.camera.center;
@@ -171,20 +171,20 @@ public:
                 || fabs(pos.z) > max)
                 break;
             //SDF result = sdf(pos);
-            dist = DE(pos);
+            dist = DE(pos, power);
             dp += dist;
             //std::cout << dist << '\n';
             if (dp >= ray.magnitude())
                 return pxl;
-            if (dist < 0.001) {
+            if (dist < 0.0001) {
                 /*if (fabs(dp - ray.magnitude()) < 0.01)
                     return pxl;*/
                 //pxl = shade(result);
-                //pxl = shade(u*dist, mandelbulb);
-                /*dp = 2*dp*PI;
-                pxl = Color(int(dp*sinf(dp))%255, int(dp*3)%255, int(dp)%255);*/
-                int v = 3*int(dp) % 255;
-                pxl = Color(v,v,v);
+                //pxl = shade(u*dp, mandelbulb);
+                dp = 2*dp*PI;
+                pxl = Color(int(dp*sinf(dp))%255, int(dp*dp)%255, int(dp)%255);
+                /*int v = 3*int(dp) % 255;
+                pxl = Color(v,v,v);*/
                 break;
             }
 
@@ -233,7 +233,7 @@ public:
         return color;
     }
 
-    Image generateImage(){
+    Image generateImage(float power){
         Image image(width, height);
         std::vector<Vector3> planInfos = scene.camera.buildImagePlan();
         Vector3 refVector = planInfos[0];
@@ -247,7 +247,7 @@ public:
                 if (j == 530 && i == 530)
                     debug = true;
                 //image.pixels[i-1][j-1] = castRay(Ray, 1);
-                image.pixels[i-1][j-1] = rayMarch(Ray);
+                image.pixels[i-1][j-1] = rayMarch(Ray, power);
             }
         }
         return image;
