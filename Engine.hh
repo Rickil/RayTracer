@@ -11,6 +11,7 @@
 #include <utility>
 #include <iostream>
 #include <thread>
+#include <SFML/Graphics.hpp>
 
 class Engine {
 public:
@@ -186,9 +187,8 @@ public:
         return color;
     }
 
-    Image generateImage(float power){
+    void generateImage(sf::Image* sfml_image, float power){
         const int nb_threads = std::thread::hardware_concurrency();
-        Image image(width, height);
         std::vector<Vector3> planInfos = scene.camera.buildImagePlan();
         Vector3 refVector = planInfos[0];
         Vector3 rightDirection = planInfos[1];
@@ -206,7 +206,8 @@ public:
                         Vector3 pixelFinderDown = (downDirection/height*(y+1)).setOrigin(refVector.getPointReached());
                         Vector3 pixelFinderRight = (rightDirection/width*(x+1)).setOrigin(pixelFinderDown.getPointReached());
                         Vector3 Ray = Vector3(pixelFinderRight.getPointReached(), scene.camera.center);
-                        image.pixels[y][x] = rayMarch(Ray, power);
+                        Color color = rayMarch(Ray, power);
+                        sfml_image->setPixel(x, y, sf::Color(color.red, color.green, color.blue));
                     }
                 }
             });
@@ -228,7 +229,6 @@ public:
             thread.join();
         }
 
-        return image;
     }
 };
 
