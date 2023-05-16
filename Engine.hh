@@ -6,6 +6,7 @@
 #include "Vector3.hh"
 #include "Triangle.hh"
 #include "Mandelbulb.hh"
+#include "Uniform_Texture.hh"
 #include "SDF.hh"
 #include <vector>
 #include <utility>
@@ -120,6 +121,41 @@ public:
         return collisions;
     }
 
+    Color shade(int iterations, int i, Vector3 ray, Point3 intersectionPoint, float power, float epsilon){
+        int part = iterations / 6;
+        Color color;
+        //blue
+        if (i<=part){
+            int varBlue = i+part;
+            int varRed = part-i;
+            color = Color(varRed*255/part,0,varBlue*255/part);
+        }
+        //dominance green and blue
+        else if (i<=3*part){
+            int varBlue = 3*part - i;
+            int varGreen = i-part;
+            color = Color(0,varGreen*255/part, varBlue*255/part);
+        }
+        //dominance red and green
+        else if (i<=5*part){
+            int varGreen = 5*part-i;
+            int varRed = i-3*part;
+            color = Color(varRed*255/part,varGreen*255/part, 0);
+        }
+        else {
+            int varRed = iterations - i + part;
+            int varBlue = i - 5 * part;
+            color = Color(varRed * 255 / part, 0, varBlue * 255 / part);
+        }
+
+        /*Texture_Material* textureMaterial = new Uniform_Texture(color, 0.6,0.8);
+        Object* mandelbulb = new Mandelbulb(textureMaterial, power, epsilon);
+        color = applyDiffusion(mandelbulb, intersectionPoint, ray);*/
+        /*std::cout << "(" << std::to_string(color.red) << "," << std::to_string(color.green)
+                   << "," << std::to_string(color.blue) << ")";*/
+        return color;
+    }
+
     Color rayMarch(Vector3 ray, float power){
         float dp = 0;
         Vector3 u = normalize(ray);
@@ -127,7 +163,9 @@ public:
         float dist;
         Point3 pos = scene.camera.center;
         float max = 9999.0f;
-        for (int i = 0; i < 150; i++) {
+        int iterations = 300;
+        float precision = 0.0005;
+        for (int i = 0; i < iterations; i++) {
             if (fabs(pos.x) > max
                 || fabs(pos.y) > max
                 || fabs(pos.z) > max)
@@ -136,9 +174,12 @@ public:
             dp += dist;
             if (dp >= ray.magnitude())
                 return pxl;
-            if (dist < 0.001) {
+            if (dist < precision) {
                 dp = 2*dp*PI;
-                pxl = Color(int(dp*sinf(dp))%255, int(dp*dp)%255, int(dp)%255);
+                Vector3 finalRay = u*dp;
+                Point3 intersectionPoint = finalRay.getPointReached();
+                pxl = shade(iterations, i, finalRay, intersectionPoint, power, precision);
+                //pxl = Color(int(dp*sinf(dp))%255, int(dp*dp)%255, int(dp)%255);
                 break;
             }
 

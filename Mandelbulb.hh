@@ -11,10 +11,10 @@ public:
     float epsilon;
     float power;
 
-    Mandelbulb(Texture_Material* textureMaterial, float power) {
-        this->textureMaterial = textureMaterial;
+    Mandelbulb(Texture_Material* textureMaterial, float power, float epsilon) {
         this->epsilon = epsilon;
         this->power = power;
+        this->textureMaterial = textureMaterial;
     }
 
     std::optional<Point3> intersect(Vector3 ray){return std::nullopt;}

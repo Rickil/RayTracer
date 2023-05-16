@@ -1,20 +1,22 @@
 #include "Camera.hh"
 #include "Engine.hh"
+#include "Point_Light.hh"
 #include <string>
 #include <chrono>
 
-#define WIDTH 200
-#define HEIGHT 200
+#define WIDTH 700
+#define HEIGHT 700
 
 int main(){
     //start measuring time
     auto start = std::chrono::high_resolution_clock::now();
 
-    Camera camera(Point3(-2,-2,0.1), Point3(0,0,0.1), Vector3(0,0,1)
+    Camera camera(Point3(-2,-2,3), Point3(0,0,0.1), Vector3(0,0,1)
                   ,70,70);
     Scene scene(camera);
+    scene.lights.push_back(new Point_Light(1,Point3(-2,-2,3)));
     Engine engine(scene, WIDTH, HEIGHT, 1);
-    float power  = 1;
+    float power  = 8;
     float step = 0.05;
     sf::Image* sfml_image = new sf::Image;
     sfml_image->create(WIDTH, HEIGHT);
@@ -46,7 +48,7 @@ int main(){
             }
         }
 
-        power+=step;
+        //power+=step;
     }
 
 

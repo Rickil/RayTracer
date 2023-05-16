@@ -3,8 +3,12 @@ project(TP1_RayTracing)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(SFML_STATIC_LIBRARIES TRUE)
+set(SFML_DIR C:/SFML/lib/cmake/SFML)
 find_package(SFML REQUIRED COMPONENTS graphics window system)
 include_directories(.)
+include_directories(C:/SFML/include)
+include_directories(C:/Dev/OpenCL-SDK/include)
 
 add_compile_options(-O3)
 
