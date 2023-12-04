@@ -1,2 +1,3 @@
-# TP1RayTracing
-TP Ray traycing ING 2
+# Raytracer
+
+This project is a raytracer implemented in C++ without any libs.
